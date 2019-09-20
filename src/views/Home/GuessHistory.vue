@@ -21,10 +21,15 @@
                 <div class="team">
                   <img src="../../assets/ig.png" alt />
                   <span>IG</span>
+                  <img src="../../assets/win.png" alt="" class="win">
                 </div>
-                <span class="num" @click="addShopCar(item)">1.33</span>
+                <span class="num">1.33</span>
               </div>
             </div>
+          </div>
+          <div class="list-footer between">
+            <span>投注 500</span>
+            <span>返还 500</span>
           </div>
         </li>
       </ul>
@@ -114,6 +119,12 @@ export default {
               color: #fff1d3;
               vertical-align: middle;
             }
+            .win{
+              height: 20px;
+              float: right;
+              vertical-align: middle;
+              margin-top: 4px;
+            }
             .team {
               flex: 1;
             }
@@ -122,12 +133,21 @@ export default {
               text-align: center;
               height: 100%;
               line-height: 74px;
-              border-left: 1px solid #8b6c2b /*no*/;
+              // border-left: 1px solid #8b6c2b /*no*/;
             }
             &:first-child {
               border-bottom: 1px solid #8b6c2b /*no*/;
             }
           }
+        }
+      }
+      .list-footer{
+        background: $yellow;
+        padding: 0 24px;
+        span{
+          font-size: 24px;
+          color: $black;
+          line-height: 56px;
         }
       }
     }

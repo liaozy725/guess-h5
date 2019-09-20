@@ -18,6 +18,7 @@
           <div class="list-tit">
             <img src="../../assets/game.png" alt class="tit-logo" />
             <span>LOL-TCL LPL/BO1 {{index}}</span>
+            <span class="more-res" @click="moreRes(item)">更多赛果</span>
           </div>
           <div class="list-main">
             <div class="time">
@@ -61,6 +62,10 @@ export default {
         this.listData = this.listData.concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
         this.loading = false;
       }, 500);
+    },
+    // 更多赛果
+    moreRes(item){
+      this.$router.push('/layout/GuessDetail')
     }
   }
 };
@@ -107,6 +112,13 @@ export default {
         span {
           font-size: 20px;
           color: #000;
+          flex: 1;
+        }
+        .more-res{
+          text-align: right;
+          flex: none;
+          height: 53px;
+          line-height: 53px;
         }
       }
       .list-main {
