@@ -1,12 +1,12 @@
 <template>
   <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getList">
-    <van-cell v-for="item in listData">
+    <van-cell v-for="(item,index) in listData" :key="index">
       <template slot="title">
         <p class="between">
-          <span class="title">通知</span>
-          <span>2019/06/03 22:12</span>
+          <span class="title">{{item.title}}</span>
+          <span>{{item.createTime|parseTime}}</span>
         </p>
-        <div class="content" :class="item.isShow&&'show'" @click="toggleShow(item)" >内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑内容后台编辑</div>
+        <div class="content" :class="item.isShow&&'show'" @click="toggleShow(item)" >{{item.content}}</div>
       </template>
     </van-cell>
   </van-list>
@@ -16,25 +16,34 @@
 export default {
   data() {
     return {
-      listData: [{}, {}, {}, {}],
-      loading: false,
-      finished: false
+      loading:false,//加载中
+      finished:false,//没有更多数据
+      pageNum:0,
+      pageSize:20,
+      listData: [],
+
     };
   },
   created(){
     this.$store.commit("setPageTitle","系统消息");
   },
   methods: {
-    getList() {
+    getList(){
       var params={
-        token:this.$store.state.token
+        token:this.$store.state.token,
+        pageSize:this.pageSize,
+        pageNum:this.pageNum,
       }
-      this.$http.post("userBank/info", params).then(res => {
+      this.loading = true;
+      this.$http.post("sysNotice/list", params).then(res => {
         if (res.retCode == 0) {
-          if (!!res.data) {
-            this.bankInfo = res.data;
-          } 
+         this.listData = this.listData.concat(res.data);
+         this.pageNum++;
+          if(res.data.length < this.pageSize) {
+            this.finished = true;
+          }
         }
+        this.loading = false;
       });
     },
     // 显示内容详情
@@ -65,7 +74,7 @@ export default {
     color: $gray;
     line-height: 40px;
     margin-top: 12px;
-    height: 40px;
+    // height: 40px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -31,7 +31,8 @@
         </div>
       </div>
       <div class="content-body content-b between">
-        <p class="content-label">当前可提现金额 {{userInfo.userBalance}}</p>
+        <p class="content-label" v-if="userInfo">当前可提现金额 {{userInfo.userBalance||0}}</p>
+        
         <div class=""></div>
         <div class="btn" @click="allWithdraw">全部提现</div>
       </div>
@@ -187,7 +188,12 @@ export default {
       // if(this.userInfo.userBalance>0){
         
       // }
-      this.price = this.userInfo.userBalance+'';
+      if(this.userInfo&&this.userInfo.userBalance){
+        this.price = this.userInfo.userBalance+'';
+      }else{
+        this.price ='0';
+      }
+      
     },
     //选择支付方式
     changePay(num) {

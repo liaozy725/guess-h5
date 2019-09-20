@@ -9,12 +9,13 @@
       
       <!-- <van-tab title="其他"></van-tab> -->
     </van-tabs>
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getList">
+    <van-list v-model="loading" :finished="finished" :offset="20" finished-text="没有更多了" @load="getList">
       <div class="list-box">
         <div class="list between" v-for="(item,i) in listData" :key="i">
           <div class="list-l">{{item.remark}}</div>
           <div class="list-c">{{item.createTime|parseTime}}</div>
-          <div class="list-r">+400</div>
+          <div class="list-r" v-if="item.transactionStatus=='add'">+{{item.amount}}</div>
+          <div class="list-r" v-if="item.transactionStatus=='sub'">-{{item.amount}}</div>
         </div>
       </div>
     </van-list>
@@ -30,7 +31,7 @@ export default {
       loading:false,//加载中
       finished:false,//没有更多数据
       pageNum:0,
-      pageSize:10,
+      pageSize:20,
       listData: [],
     };
   },
@@ -41,28 +42,25 @@ export default {
   methods: {
     //改变tab
     changeTab(val){
-      console.log(val,'val')
       this.pageNum=0;
       this.listData=[];
+      this.finished = false;
       this.getList();
     },
     //获取数据
     getList(){
-      // setTimeout(()=>{
-      //   this.listData = this.listData.concat([{}, {}, {}, {}]);
-      //   this.loading = false;
-      // },500)
       var params={
         token:this.$store.state.token,
         pageSize:this.pageSize,
         pageNum:this.pageNum,
         transactionType:this.active=="0"?'':this.active,
       }
+      this.loading = true;
       this.$http.post("userBalanceInfo/list", params).then(res => {
         if (res.retCode == 0) {
          this.listData = this.listData.concat(res.data);
          this.pageNum++;
-          if(res.data.length < 10) {
+          if(res.data.length < this.pageSize) {
             this.finished = true;
           }
         }
