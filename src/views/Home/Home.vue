@@ -1,11 +1,11 @@
 <template>
   <div class="container home" @scroll="onPageScroll" :style="isFixed?'padding-top:'+fixedHeight +'px':''">
-    <div class="swiper">
+    <!-- <div class="swiper">
       <van-swipe :autoplay="3000" :show-indicators="false">
         <van-swipe-item></van-swipe-item>
         <van-swipe-item></van-swipe-item>
       </van-swipe>
-    </div>
+    </div> -->
     <div class="navs-box" ref="navsBox" :class="isFixed&&'fixed'" :style="isFixed?'margin-top:'+baseHeight +'px':''">
       <van-tabs v-model="activeGame" line-height="0" :border="false" class="games">
         <van-tab>
@@ -13,7 +13,7 @@
             <img src="../../assets/all.png" alt />
           </div>
         </van-tab>
-        <van-tab v-for="item in 10">
+        <van-tab v-for="item in gameList">
           <div slot="title" class="game">
             <img src="../../assets/game.png" alt />
           </div>
@@ -68,12 +68,16 @@ export default {
       baseHeight: 0,
       fixedHeight: 0,
       isFixed: false,
-      showPopup: false
+      showPopup: false,
+      gameList:[], // 游戏列表
+      guessList:[], // 竞猜
     };
   },
   components: { GuessCar },
   created() {
-    this.$store.commit("setPageTitle", "首页")
+    this.$store.commit("setPageTitle", "首页");
+    this.getGameList();
+    this.getGuessList();
   },
   mounted() {
     this.baseHeight = document.getElementById("navigation").offsetHeight;
@@ -93,6 +97,26 @@ export default {
     // 跳转到竞猜详情
     guessInfo(item) {
       this.$router.push('/layout/GuessDetail');
+    },
+    // 获取游戏列表
+    getGameList(){
+      this.$http.post('home/gameList',{token:this.$store.state.token}).then(res=>{
+        if(res.retCode==0){
+          this.gameList = res.data;
+        }
+      })
+    },
+    // 获取竞猜列表
+    getGuessList(gameId){
+      let params = {
+        token: this.$store.state.token,
+        gameId:this.activeGame
+      }
+      this.$http.post('home/HomeListReq',params).then(res=>{
+        if(res.retCode==0){
+          this.guessList = res.data;
+        }
+      })
     }
   }
 };

@@ -37,6 +37,10 @@ axios.interceptors.response.use(response=>{
   try {
     if(response.data.retCode=='0'){
       return response.data;
+    }else if(response.data.retCode == '10002') {
+      Toast.fail(response.data.errorMsg || '退出登录');
+      router.replace('/login');
+      return response.data;
     }else{
       Toast.fail(response.data.errorMsg || '');
       return response.data;
