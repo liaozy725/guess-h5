@@ -88,7 +88,7 @@ export default {
       ], //金额筛选的项
       show: false, //控制弹出数字键盘
       isFinish: false, //判断是否完成
-      showCode:true,//控制二维码弹框
+      showCode:false,//控制二维码弹框
       codeUrl:'https://wallimn.iteye.com',//二维码地址
     };
   },
