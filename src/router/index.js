@@ -28,6 +28,8 @@ export default new Router({
         {path:'/layout/GuessHistory',name:'GuessHistory',component: () => import('@/views/Home/GuessHistory.vue') ,meta: { keepAlive: true, title:'投注历史' }},
         //用户中心-充值
         {path:'/layout/pay',name:'pay',component: () => import('@/views/User/pay.vue'),meta: { keepAlive: true ,title:'充值',}},
+        //用户中心-充值-二维码弹框
+        {path:'/layout/payCode',name:'payCode',component: () => import('@/views/User/payCode.vue'),meta: { keepAlive: true ,title:'充值二维码',}},
         //用户中心-系统消息
         {path:'/layout/SystemMsg',name:'SystemMsg',component: () => import('@/views/User/SystemMsg.vue'),meta: { keepAlive: true ,title:'系统消息',}},
         //用户中心-提现
