@@ -133,6 +133,7 @@ export default {
           
           if(parseFloat(this.price) >= 100){
             this.showShopCar = true;
+            this.isFinish = false;
           }else{
             this.$toast({
               duration: 1000,
@@ -180,6 +181,8 @@ export default {
     //关闭二维码弹框
     clearCodeModel(){
       this.showCode=false;
+      this.isFinish=true;
+      this.showShopCar = true;
     }
   }
 };
