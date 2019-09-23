@@ -7,13 +7,13 @@
       </van-swipe>
     </div> -->
     <div class="navs-box" ref="navsBox" :class="isFixed&&'fixed'" :style="isFixed?'margin-top:'+baseHeight +'px':''">
-      <van-tabs v-model="activeGame" line-height="0" :border="false" class="games">
-        <van-tab>
+      <van-tabs v-model="activeGame" line-height="0" :border="false" class="games" @change="gameChange">
+        <van-tab name="all">
           <div slot="title" class="game">
             <img src="../../assets/all.png" alt />
           </div>
         </van-tab>
-        <van-tab v-for="item in gameList">
+        <van-tab v-for="item in gameList" :name="item.id">
           <div slot="title" class="game">
             <img :src="item.gamePic" alt />
           </div>
@@ -63,7 +63,7 @@ export default {
   name: "home",
   data() {
     return {
-      activeGame: "",
+      activeGame: "all",
       activeTab: "",
       baseHeight: 0,
       fixedHeight: 0,
@@ -117,6 +117,11 @@ export default {
           this.guessList = res.data;
         }
       })
+    },
+    // 标签改变
+    gameChange(name){
+      this.activeGame = name;
+      this.getGuessList();
     }
   }
 };
@@ -287,5 +292,11 @@ export default {
 .submit-btn >>> .van-button__text {
   color: #252426;
   font-size: 29px;
+}
+.van-tab .game img{
+  opacity: 0.4;
+}
+.van-tab--active .game img{
+  opacity: 1;
 }
 </style>

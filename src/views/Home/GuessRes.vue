@@ -6,9 +6,9 @@
           <img src="../../assets/all.png" alt />
         </div>
       </van-tab>
-      <van-tab v-for="item in 10">
+      <van-tab v-for="item in gameList">
         <div slot="title" class="game">
-          <img src="../../assets/game.png" alt />
+          <img :src="item.gamePic" alt />
         </div>
       </van-tab>
     </van-tabs>
@@ -50,11 +50,13 @@ export default {
       activeTab: "",
       loading: false,
       finished: false,
-      listData: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+      listData: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+      gameList:[]
     };
   },
   created() {
     this.$store.commit("setPageTitle", "赛果");
+    this.getGameList();
   },
   methods: {
     getList() {
@@ -66,7 +68,15 @@ export default {
     // 更多赛果
     moreRes(item){
       this.$router.push('/layout/GuessDetail')
-    }
+    },
+    // 获取游戏列表
+    getGameList(){
+      this.$http.post('home/gameList',{token:this.$store.state.token}).then(res=>{
+        if(res.retCode==0){
+          this.gameList = res.data;
+        }
+      })
+    },
   }
 };
 </script>
@@ -90,6 +100,8 @@ export default {
       display: inline-block;
       img {
         height: 100%;
+        width: 100%;
+        object-fit: contain;
       }
     }
   }
@@ -191,5 +203,11 @@ export default {
 .games >>> .van-tab {
   flex-basis: 106px !important;
   flex: none;
+}
+.van-tab .game img{
+  opacity: 0.4;
+}
+.van-tab--active .game img{
+  opacity: 1;
 }
 </style>

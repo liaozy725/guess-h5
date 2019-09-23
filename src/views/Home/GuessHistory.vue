@@ -50,6 +50,7 @@ export default {
   },
   created() {
     this.$store.commit("setPageTitle","投注历史");
+    this.getGameList();
   },
   methods: {
     getList(){
@@ -57,7 +58,8 @@ export default {
         this.listData = this.listData.concat([1,2,3,4,5,6,7,8,9,0]);
         this.loading=false;
       },500)
-    }
+    },
+    
   }
 };
 </script>
