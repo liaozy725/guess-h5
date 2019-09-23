@@ -15,7 +15,7 @@
         </van-tab>
         <van-tab v-for="item in gameList">
           <div slot="title" class="game">
-            <img src="../../assets/game.png" alt />
+            <img :src="item.gamePic" alt />
           </div>
         </van-tab>
       </van-tabs>
