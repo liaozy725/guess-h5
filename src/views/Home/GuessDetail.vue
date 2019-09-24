@@ -74,7 +74,11 @@ export default {
   },
   components: { GuessCar },
   created(){
-    this.$store.commit("setPageTitle","竞猜");
+    if(this.$route.query.type=='guessRes'){
+      this.$store.commit("setPageTitle","更多赛果");
+    }else{
+      this.$store.commit("setPageTitle","竞猜");
+    }
     this.getGuessDetail();
   },
   methods:{

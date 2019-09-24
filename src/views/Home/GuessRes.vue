@@ -67,7 +67,12 @@ export default {
     },
     // 更多赛果
     moreRes(item){
-      this.$router.push('/layout/GuessDetail')
+      this.$router.push({
+        path:'/layout/GuessDetail',
+        query:{
+          type:'guessRes'
+        }
+      })
     },
     // 获取游戏列表
     getGameList(){
