@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <guess-car :showPopup="showPopup" @popupClose="showPopup=false;"></guess-car>
+    <guess-car :carData="carData" :showPopup="showPopup" @popupClose="showPopup=false;"></guess-car>
   </div>
 </template>
 
@@ -66,12 +66,31 @@ export default {
     return {
       showPopup: false,
       activeTab: 0,
-      list: [1, 2, 3, 4, 5, 6, 7, 8]
+      list: [1, 2, 3, 4, 5, 6, 7, 8],
+      guessId:this.$route.query.id,
+      guessData:{},
+      carData:[]
     };
   },
   components: { GuessCar },
   created(){
     this.$store.commit("setPageTitle","竞猜");
+    this.getGuessDetail();
+  },
+  methods:{
+    // 获取竞猜详情
+    getGuessDetail(){      
+      let params = {
+        token: this.$store.state.token,
+        guessId: this.guessId,
+        number: this.activeTab
+      }
+      this.$http.post('home/guessInfoList',params).then(res=>{
+        if(res.retCode==0){
+          this.guessData = res.data;
+        }
+      })
+    }
   }
 };
 </script>

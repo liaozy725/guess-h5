@@ -21,9 +21,9 @@
       </van-tabs>
       <div class="guess-nav-type">
         <ul class="guess-ul">
-          <li class="active" @click="changeType('all')">全部</li>
-          <li @click="changeType('all')">早盘</li>
-          <li @click="changeType('all')">滚盘</li>
+          <li class="active" @click="changeType('')">全部</li>
+          <li @click="changeType(2)">早盘</li>
+          <li @click="changeType(1)">滚盘</li>
         </ul>
         <router-link to="/layout/GuessRes" class="result-btn">赛果</router-link>
       </div>
@@ -53,7 +53,7 @@
       </li>
     </ul>
 
-    <guess-car :showPopup="showPopup" @popupClose="showPopup=false"></guess-car>
+    <guess-car :carData="carData" :showPopup="showPopup" @popupClose="showPopup=false" @deleteGuess="deleteGuess"></guess-car>
   </div>
 </template>
 
@@ -64,13 +64,14 @@ export default {
   data() {
     return {
       activeGame: "all",
-      activeTab: "",
+      playType: "",
       baseHeight: 0,
       fixedHeight: 0,
       isFixed: false,
       showPopup: false,
       gameList:[], // 游戏列表
       guessList:[], // 竞猜
+      carData:[1,2], // 购物车数据
     };
   },
   components: { GuessCar },
@@ -89,14 +90,23 @@ export default {
       this.isFixed = e.target.scrollTop >= this.fixedHeight;
     },
     // 改变早盘、滚盘
-    changeType(type) { },
+    changeType(type) {
+      this.playType = type;
+      this.getGuessList();
+    },
     // 添加购物车
     addShopCar(item) {
       this.showPopup = true;
+      if(!this.includes.includes(item)){
+        this.carData.push(item);
+      }
     },
     // 跳转到竞猜详情
     guessInfo(item) {
-      this.$router.push('/layout/GuessDetail');
+      this.$router.push({
+        path:'/layout/GuessDetail',
+        id: item.id
+      });
     },
     // 获取游戏列表
     getGameList(){
@@ -110,7 +120,9 @@ export default {
     getGuessList(gameId){
       let params = {
         token: this.$store.state.token,
-        gameId:this.activeGame
+        gameId:this.activeGame,
+        playType: this.playType,
+        isSealed:'n'
       }
       this.$http.post('home/HomeListReq',params).then(res=>{
         if(res.retCode==0){
@@ -122,6 +134,10 @@ export default {
     gameChange(name){
       this.activeGame = name;
       this.getGuessList();
+    },
+    // 购物车删除回调
+    deleteGuess(res){
+      this.carData.splice(res.index,1);
     }
   }
 };

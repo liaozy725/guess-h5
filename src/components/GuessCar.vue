@@ -10,8 +10,8 @@
     </div>
     <div class="pop-main">
       <ul class="pop-list">
-        <li>
-          <div class="list-1" @click="deleteItem()">
+        <li v-for="(item,index) in carData">
+          <div class="list-1" @click="deleteItem(item,index)">
             <img src="../assets/icon-close.png" alt />
           </div>
           <div class="list-2">
@@ -21,7 +21,7 @@
           </div>
           <div class="list-3">1.97</div>
           <div class="list-4">
-            <div class="num-input" @click="openKeybroad()">2</div>
+            <div class="num-input" @click="openKeybroad(item)">2</div>
             <p class="between">
               <span>返还：</span>
               <span>3.94</span>
@@ -42,7 +42,7 @@
           <span class="sure" @click="sureInput">确认</span>
         </div>
       </div>
-      <van-button size="large" color="#ffc444" class="submit-btn">确认投注 1 RMB</van-button>
+      <van-button size="large" color="#ffc444" class="submit-btn" @click="submit">确认投注 {{totalMoney}} RMB</van-button>
     </div>
   </van-popup>
 </template>
@@ -52,6 +52,13 @@ export default {
   props: {
     showPopup: {
       default: false
+    },
+    // 数据
+    carData: {
+      type:Array,
+      default:()=>{
+        return [];
+      }
     }
   },
   data() {
@@ -59,7 +66,8 @@ export default {
       numArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
       showGuessCar: this.showPopup,
       showKeyboard: false,
-      keyboardValue: 0
+      keyboardValue: 0,
+      totalMoney:0
     };
   },
   methods: {
@@ -68,12 +76,14 @@ export default {
       this.$emit("popupClose", false);
     },
     // 关闭键盘
-    openKeybroad(val) {
-      this.keyboardValue = val;
+    openKeybroad(itme) {
+      this.keyboardValue = itme;
       this.showKeyboard = true;
     },
     // 删除数据
-    deleteItem(item, index) {},
+    deleteItem(item, index) {
+      this.$emit('deleteGuess',{item:item, index:index});
+    },
     // 数字点击输入
     inputNum(clear, num) {
       if(!this.keyboardValue){this.keyboardValue=''}
@@ -87,6 +97,10 @@ export default {
     // 输入确认
     sureInput(){
       this.showKeyboard = false;
+    },
+    // 确认投注
+    submit(){
+
     }
   },
   watch: {
