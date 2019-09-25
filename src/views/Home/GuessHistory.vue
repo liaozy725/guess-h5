@@ -1,8 +1,8 @@
 <template>
   <div class="container guess-history">
     <van-tabs class="tabs" v-model="activeTab" :border="false">
-      <van-tab title="未结算"></van-tab>
-      <van-tab title="已结算"></van-tab>
+      <van-tab title="未结算" name="2"></van-tab>
+      <van-tab title="已结算" name="1"></van-tab>
     </van-tabs>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getList">
       <ul class="guess-list">
@@ -42,24 +42,35 @@ export default {
   name: "GuessHistory",
   data() {
     return {
-      activeTab: "",
-      loading:false,
-      finished:false,
-      listData:[1,2,3,4,5,6,7,8,9,0]
+      activeTab: 2,
+      loading: false,
+      finished: false,
+      listData: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
     };
   },
   created() {
-    this.$store.commit("setPageTitle","投注历史");
-    this.getGameList();
+    this.$store.commit("setPageTitle", "投注历史");
+    this.userBettingList();
   },
   methods: {
-    getList(){
-      setTimeout(()=>{
-        this.listData = this.listData.concat([1,2,3,4,5,6,7,8,9,0]);
-        this.loading=false;
-      },500)
+    getList() {
+      setTimeout(() => {
+        this.listData = this.listData.concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+        this.loading = false;
+      }, 500)
     },
-    
+    // 获取投注历史
+    userBettingList() {
+      let params = {
+        token: this.$store.state.token,
+        matchResult: this.activeTab
+      }
+      this.$http.post('home/userBettingList', params).then(res => {
+        if (res.retCode == 0) {
+          this.listData = res.data;
+        }
+      })
+    }
   }
 };
 </script>
@@ -121,7 +132,7 @@ export default {
               color: #fff1d3;
               vertical-align: middle;
             }
-            .win{
+            .win {
               height: 20px;
               float: right;
               vertical-align: middle;
@@ -143,10 +154,10 @@ export default {
           }
         }
       }
-      .list-footer{
+      .list-footer {
         background: $yellow;
         padding: 0 24px;
-        span{
+        span {
           font-size: 24px;
           color: $black;
           line-height: 56px;
@@ -157,7 +168,7 @@ export default {
 }
 </style>
 <style scoped>
->>> .van-tab{
+>>> .van-tab {
   flex: none;
   margin-right: 100px;
 }

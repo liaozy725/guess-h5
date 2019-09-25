@@ -100,7 +100,20 @@ export default {
     },
     // 确认投注
     submit(){
+      let params = {
+        token: this.$store.state.token,
+        guessIds:'', // 竞猜ID多个以（,）号隔开
+        guessInfoIds:'', // 竞猜详情Id多个以（,）号隔开
+        gameTeamIds:'', // 竞猜队伍Id多个以（,）号隔开
+        numbers:'', // 下注多少多个以（,）号隔开
+        bettings:'', // 返还多少多个以（,）号隔开
+        title:'' // 下注的比赛标题
+      }
+      this.$http.post('home/userBetting',params).then(res=>{
+        if(res.retCode ==0){
 
+        }
+      })
     }
   },
   watch: {
