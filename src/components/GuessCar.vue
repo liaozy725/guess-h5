@@ -1,30 +1,30 @@
 <template>
   <!-- 购物车 -->
-  <van-popup v-model="showGuessCar" position="bottom" :style="{width:'100%'}" class="shop-car" safe-area-inset-bottom @close="popupClose">
-    <div class="pop-header">
+  <van-popup v-model="showGuessCar" :overlay="showAll" position="bottom" :style="{width:'100%'}" :close-on-click-overlay="false" class="shop-car" safe-area-inset-bottom @close="popupClose">
+    <div class="pop-header" @click="showAll=!showAll">
       <div class="header-l">
         <span>投注单：</span>
-        <i>1</i>
+        <i>{{carData.length}}</i>
       </div>
-      <img src="../assets/icon-down-y.png" @click="showGuessCar=false;" alt />
+      <img src="../assets/icon-down-y.png" :style="!showAll&&'transform:rotate(180deg)'" alt />
     </div>
-    <div class="pop-main">
+    <div class="pop-main" v-show="showAll">
       <ul class="pop-list">
         <li v-for="(item,index) in carData">
           <div class="list-1" @click="deleteItem(item,index)">
             <img src="../assets/icon-close.png" alt />
           </div>
           <div class="list-2">
-            <p class="list-tit">RNG</p>
-            <p class="list-content">第一局比赛获胜队伍</p>
-            <p class="list-content">RNG VS IG</p>
+            <p class="list-tit">{{item.gameTeamName}}</p>
+            <p class="list-content">{{item.name}}</p>
+            <p class="list-content">{{item.teams.join(' VS ')}}</p>
           </div>
-          <div class="list-3">1.97</div>
+          <div class="list-3">{{item.oddsAmount}}</div>
           <div class="list-4">
-            <div class="num-input" @click="openKeybroad(item)">2</div>
+            <div class="num-input" @click="openKeybroad(item,index)">{{item.number}}</div>
             <p class="between">
               <span>返还：</span>
-              <span>3.94</span>
+              <span>{{(item.oddsAmount * item.number).toFixed(2) || 0}}</span>
             </p>
           </div>
         </li>
@@ -65,19 +65,31 @@ export default {
     return {
       numArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
       showGuessCar: this.showPopup,
-      showKeyboard: false,
+      showKeyboard: false, // 显示键盘
+      showAll:true, // 显示列表
       keyboardValue: 0,
-      totalMoney:0
+      activeItemIndex:0
     };
+  },
+  computed:{
+    // 计算总金额
+    totalMoney(){
+      let total = 0;
+      this.carData.forEach(el => {
+        total += parseFloat((el.number*el.oddsAmount).toFixed(2))
+      });
+      return total.toFixed(2)
+    }
   },
   methods: {
     // 弹窗关闭回调
     popupClose() {
       this.$emit("popupClose", false);
     },
-    // 关闭键盘
-    openKeybroad(itme) {
-      this.keyboardValue = itme;
+    // 打开键盘
+    openKeybroad(item,index) {
+      this.keyboardValue = item.number;
+      this.activeItemIndex = index;
       this.showKeyboard = true;
     },
     // 删除数据
@@ -88,30 +100,57 @@ export default {
     inputNum(clear, num) {
       if(!this.keyboardValue){this.keyboardValue=''}
       this.keyboardValue = clear ? num : this.keyboardValue + "" + num;
+      this.carData[this.activeItemIndex].number = this.keyboardValue;
     },
     // 输入删除
     unInput() {
-      this.keyboardValue = this.keyboardValue + '';
-      this.keyboardValue = this.keyboardValue.substring(0,this.keyboardValue.length-1);
+      this.keyboardValue = this.keyboardValue == 0 ? '' : this.keyboardValue + '';
+      this.keyboardValue = this.keyboardValue.substring(0,this.keyboardValue.length-1) || 0;
+      this.carData[this.activeItemIndex].number = this.keyboardValue;
     },
     // 输入确认
     sureInput(){
+      this.carData[this.activeItemIndex].number = this.keyboardValue;
       this.showKeyboard = false;
+      let item = this.carData[this.activeItemIndex];
+      let params = {
+        token:this.$store.state.token,
+        guessId: item.guessId,
+        guessInfoId: item.guessInfoId,
+        gameTeamId: item.gameTeamId
+      }
     },
     // 确认投注
     submit(){
+      let guessIds=[],guessInfoIds=[],gameTeamIds=[],numbers=[],bettings=[];
+      this.carData.forEach(el => {
+        if(el.number>0){
+          guessIds.push(el.guessId);
+          guessInfoIds.push(el.guessInfoId);
+          gameTeamIds.push(el.gameTeamId);
+          numbers.push(el.number);
+          bettings.push((el.number*el.oddsAmount).toFixed(2));
+        }
+      });
       let params = {
         token: this.$store.state.token,
-        guessIds:'', // 竞猜ID多个以（,）号隔开
-        guessInfoIds:'', // 竞猜详情Id多个以（,）号隔开
-        gameTeamIds:'', // 竞猜队伍Id多个以（,）号隔开
-        numbers:'', // 下注多少多个以（,）号隔开
-        bettings:'', // 返还多少多个以（,）号隔开
-        title:'' // 下注的比赛标题
+        guessIds:guessIds.join(), // 竞猜ID多个以（,）号隔开
+        guessInfoIds:guessInfoIds.join(), // 竞猜详情Id多个以（,）号隔开
+        gameTeamIds:gameTeamIds.join(), // 竞猜队伍Id多个以（,）号隔开
+        numbers:numbers.join(), // 下注多少多个以（,）号隔开
+        bettings:bettings.join() // 返还多少多个以（,）号隔开
+      }
+      if(guessIds.length<=0){
+        return this.$toast({duration: 2000,forbidClick: true,message: "请选择下注数量"});
       }
       this.$http.post('home/userBetting',params).then(res=>{
         if(res.retCode ==0){
-
+          this.$toast({
+            duration: 2000,
+            forbidClick: true, // 禁用背景点击
+            message: "下单成功"
+          });
+          this.$emit("uploadCarData")
         }
       })
     }
@@ -119,6 +158,13 @@ export default {
   watch: {
     showPopup() {
       this.showGuessCar = this.showPopup;
+    },
+    carData(newVal){
+      if(this.carData.length == 0){
+        this.showGuessCar = false;
+        this.showAll = true;
+        this.showKeyboard = false;
+      }
     }
   }
 };
@@ -161,12 +207,15 @@ export default {
       width: 26px;
       height: 16px;
       margin-right: 54px;
+      transition: all linear 0.25s;
     }
   }
   .pop-main {
     .pop-list {
       background: #19181a;
       color: $gray;
+      max-height: 588px;
+      overflow-y: auto;
       li {
         height: 147px;
         position: relative;
