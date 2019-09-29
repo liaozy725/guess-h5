@@ -2,8 +2,8 @@
   <div class="container guess-detail">
     <header class="header">
       <p class="title">
-        <img src="../../assets/game.png" alt />
-        <span>LOL-TCL LPL/BO1</span>
+        <img :src="guessData.gamePic" alt />
+        <span>{{guessData.gameName}}-{{guessData.matchName}} {{guessData.name}}</span>
       </p>
       <div class="header-main">
         <div class="header-l header-team">
@@ -33,20 +33,21 @@
       </div>
     </header>
 
-    <van-tabs class="tabs" v-model="activeTab" :border="false">
-      <van-tab v-for="index in 8" :name="index" :title="'标签 ' + index"></van-tab>
+    <van-tabs class="tabs" v-model="activeTab" :border="false" @change="tabChange">
+      <van-tab v-for="index in 8" :name="index" :title="'第' + index + '局'"></van-tab>
     </van-tabs>
 
     <div class="table-box">
-      <div class="tables" :class="list.length>3?'my-table-over':''">
+      <div class="tables" :class="list.length>3?'my-table-over':''" v-for="(item,index) in guessData.guessInfoListReps">
         <div class="my-table">
           <ul class="title-ul clearfix">
-            <li class="tit">全场</li>
-            <li v-for="item in list">RW</li>
+            <li class="tit">第{{item.number}}局</li>
+            <li v-for="guess in item.listReps">{{guess.gameTeamName}}</li>
           </ul>
           <ul class="list-ul clearfix">
-            <li class="tit">获得比赛胜利</li>
-            <li v-for="item in list" class="win">1.62</li>
+            <li class="tit">{{item.title}}</li>
+            <li v-for="guess in item.listReps">{{guess.oddsAmount}}</li>
+            <!-- <li v-for="guess in item.listReps" class="win">{{guess.oddsAmount}}</li> -->
           </ul>
         </div>
         <div class="over-jt" v-if="list.length>3">
@@ -65,7 +66,7 @@ export default {
   data() {
     return {
       showPopup: false,
-      activeTab: 0,
+      activeTab: this.$route.query.number,
       list: [1, 2, 3, 4, 5, 6, 7, 8],
       guessId:this.$route.query.id,
       guessData:{},
@@ -94,6 +95,10 @@ export default {
           this.guessData = res.data;
         }
       })
+    },
+    // 选择局数
+    tabChange(tab){
+      this.getGuessDetail();
     }
   }
 };
@@ -170,6 +175,7 @@ export default {
   }
   .table-box {
     .tables {
+      margin-bottom: 30px;
       .my-table {
         ul {
           display: flex;

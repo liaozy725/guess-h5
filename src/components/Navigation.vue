@@ -208,6 +208,7 @@ export default {
 
   .user-menu {
     background-color: #252426;
+    z-index: 9999 !important;
     .header {
       text-align: center;
       padding-top: 45px;

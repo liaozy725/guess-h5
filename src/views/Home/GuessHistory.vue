@@ -1,6 +1,6 @@
 <template>
   <div class="container guess-history">
-    <van-tabs class="tabs" v-model="activeTab" :border="false">
+    <van-tabs class="tabs" v-model="activeTab" :border="false" @change="changeTab">
       <van-tab title="未结算" name="2"></van-tab>
       <van-tab title="已结算" name="1"></van-tab>
     </van-tabs>
@@ -43,33 +43,45 @@ export default {
   data() {
     return {
       activeTab: 2,
-      loading: false,
-      finished: false,
-      listData: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+      loading:false,//加载中
+      finished:false,//没有更多数据
+      pageNum:0,
+      pageSize:20,
+      listData: []
     };
   },
   created() {
     this.$store.commit("setPageTitle", "投注历史");
-    this.userBettingList();
   },
   methods: {
     getList() {
       setTimeout(() => {
         this.listData = this.listData.concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
-        this.loading = false;
+        
       }, 500)
     },
     // 获取投注历史
-    userBettingList() {
+    getList() {
       let params = {
         token: this.$store.state.token,
         matchResult: this.activeTab
       }
+      this.loading = true;
       this.$http.post('home/userBettingList', params).then(res => {
         if (res.retCode == 0) {
-          this.listData = res.data;
+          this.listData = this.listData.concat(res.data);
+          this.loading = false;
+          if(res.data.length<this.pageSize){
+            this.finished = true;
+          }
         }
       })
+    },
+    // 改变标签
+    changeTab(){
+      this.pageNum = 0;
+      this.finished = false;
+      this.getList()
     }
   }
 };

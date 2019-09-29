@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { uploadUserInfo } from '@/utils/utils.js'
 export default {
   props: {
     showPopup: {
@@ -82,6 +83,8 @@ export default {
     }
   },
   methods: {
+    // 更新用户数据
+    uploadUserInfo:uploadUserInfo,
     // 弹窗关闭回调
     popupClose() {
       this.$emit("popupClose", false);
@@ -150,6 +153,7 @@ export default {
             forbidClick: true, // 禁用背景点击
             message: "下单成功"
           });
+          this.uploadUserInfo();
           this.$emit("uploadCarData")
         }
       })
