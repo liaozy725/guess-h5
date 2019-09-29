@@ -34,11 +34,11 @@
     </header>
 
     <van-tabs class="tabs" v-model="activeTab" :border="false" @change="tabChange">
-      <van-tab v-for="index in 8" :name="index" :title="'第' + index + '局'"></van-tab>
+      <van-tab v-for="index in guessData.number" :name="index" :title="'第' + index + '局'"></van-tab>
     </van-tabs>
 
     <div class="table-box">
-      <div class="tables" :class="list.length>3?'my-table-over':''" v-for="(item,index) in guessData.guessInfoListReps">
+      <div class="tables" :class="item.listReps.length>3?'my-table-over':''" v-for="(item,index) in guessData.guessInfoListReps">
         <div class="my-table">
           <ul class="title-ul clearfix">
             <li class="tit">第{{item.number}}局</li>
@@ -46,17 +46,16 @@
           </ul>
           <ul class="list-ul clearfix">
             <li class="tit">{{item.title}}</li>
-            <li v-for="guess in item.listReps">{{guess.oddsAmount}}</li>
+            <li v-for="guess in item.listReps" @click.stop="addShopCar(item,guess)">{{guess.oddsAmount}}</li>
             <!-- <li v-for="guess in item.listReps" class="win">{{guess.oddsAmount}}</li> -->
           </ul>
         </div>
-        <div class="over-jt" v-if="list.length>3">
+        <div class="over-jt" v-if="item.listReps.length>3">
           <img src="../../assets/icon-sjx.png" alt />
         </div>
       </div>
     </div>
-
-    <guess-car :carData="carData" :showPopup="showPopup" @popupClose="showPopup=false;"></guess-car>
+    <guess-car :carData="carData" :showPopup="showPopup" @popupClose="showPopup=false" @deleteGuess="deleteGuess" @uploadCarData="uploadCarData"></guess-car>
   </div>
 </template>
 
@@ -96,9 +95,42 @@ export default {
         }
       })
     },
+    // 添加购物车
+    addShopCar(item,guess) {
+      let teams = [];
+      item.listReps.forEach(el => {
+        teams.push(el.gameTeamName)
+      });
+      let guessObj = {
+        guessId: item.id,
+        name: item.name,
+        guessInfoId: guess.guessInfoId,
+        gameTeamId: guess.gameTeamId,
+        gameTeamName: guess.gameTeamName,
+        oddsAmount: guess.oddsAmount,
+        number:0,
+        teams: teams
+      }
+      this.showPopup = true;
+      let idx = this.carData.findIndex((el)=>(el.guessId == guessObj.guessId && el.guessInfoId == guessObj.guessInfoId && el.gameTeamId == guessObj.gameTeamId))
+
+      if(idx<0){
+        this.carData.push(guessObj)
+      }else{
+        this.carData.splice(idx,1);
+      }
+    },
     // 选择局数
     tabChange(tab){
       this.getGuessDetail();
+    },
+    // 购物车删除回调
+    deleteGuess(res) {
+      this.carData.splice(res.index, 1);
+    },
+    // 更新购物车数据
+    uploadCarData(){
+      this.carData = [];
     }
   }
 };
