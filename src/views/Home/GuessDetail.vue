@@ -34,24 +34,24 @@
     </header>
 
     <van-tabs class="tabs" v-model="activeTab" :border="false" @change="tabChange">
-      <van-tab v-for="index in guessData.number" :name="index" :title="'第' + index + '局'"></van-tab>
+      <van-tab v-for="index in guessData.number" :name="index" :title="'第' + index + '局'" :key="index"></van-tab>
     </van-tabs>
 
     <div class="table-box">
-      <div class="tables" :class="item.listReps.length>3?'my-table-over':''" v-for="(item,index) in guessData.guessInfoListReps">
+      <div class="tables" :class="item.listReps.length>3?'my-table-over':''" v-for="(item,index) in guessData.guessInfoListReps" :key="index">
         <div class="my-table">
           <ul class="title-ul clearfix">
             <li class="tit">第{{item.number}}局</li>
-            <li v-for="guess in item.listReps">{{guess.gameTeamName}}</li>
+            <li v-for="(guess,i) in item.listReps" :key="i">{{guess.gameTeamName}}</li>
           </ul>
-          <ul class="list-ul clearfix">
+          <ul class="list-ul clearfix"  >
             <li class="tit">{{item.title}}</li>
-            <li v-for="guess in item.listReps" @click.stop="addShopCar(item,guess)">{{guess.oddsAmount}}</li>
+            <li class="num" v-for="(guess,k) in item.listReps" :key="k" :class="isInGuessCar(item,guess) && 'num-active'" @click.stop="addShopCar(item,guess)">{{guess.oddsAmount}}</li>
             <!-- <li v-for="guess in item.listReps" class="win">{{guess.oddsAmount}}</li> -->
           </ul>
         </div>
         <div class="over-jt" v-if="item.listReps.length>3">
-          <img src="../../assets/icon-sjx.png" alt />
+          <img src="../../assets/icon-sjx.png" alt /> 
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@ export default {
       list: [1, 2, 3, 4, 5, 6, 7, 8],
       guessId:this.$route.query.id,
       guessData:{},
-      carData:[]
+      carData:[] 
     };
   },
   components: { GuessCar },
@@ -80,6 +80,15 @@ export default {
       this.$store.commit("setPageTitle","竞猜");
     }
     this.getGuessDetail();
+  },
+  computed:{
+    // 判断是否在里面
+    isInGuessCar(){
+      return (item,guess)=>{
+        let idx =  this.carData.findIndex((el)=>(el.guessId == item.id &&el.guessInfoId == guess.guessInfoId && el.gameTeamId == guess.gameTeamId));
+        return idx >= 0;
+      }
+    }
   },
   methods:{
     // 获取竞猜详情
@@ -131,7 +140,7 @@ export default {
     // 更新购物车数据
     uploadCarData(){
       this.carData = [];
-    }
+    },
   }
 };
 </script>
@@ -241,7 +250,20 @@ export default {
             height: 84px;
             color: $black;
             background: $yellow;
+            &.num-active{
+              background: rgba(255,196,68,0.7);
+              color: $black;
+            }
           }
+        }
+        .list-ul{
+          li{
+            &.num-active{
+              background: rgba(255,196,68,0.7);
+              color: $black;
+            }
+          }
+          
         }
         .tit {
           flex: 0 0 244px !important;
