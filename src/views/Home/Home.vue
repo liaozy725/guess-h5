@@ -166,7 +166,6 @@ export default {
         token: this.$store.state.token,
         gameId: this.activeGame=="all"?'':this.activeGame,
         playType: this.playType,
-        isSealed: "n",
         pageSize: this.pageSize,
         pageNum: this.pageNum
       };

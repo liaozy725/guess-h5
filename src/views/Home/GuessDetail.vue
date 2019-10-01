@@ -66,6 +66,7 @@ export default {
     return {
       showPopup: false,
       activeTab: this.$route.query.number,
+      id: this.$route.query.id,
       list: [1, 2, 3, 4, 5, 6, 7, 8],
       guessId:this.$route.query.id,
       guessData:{},
@@ -85,7 +86,7 @@ export default {
     // 判断是否在里面
     isInGuessCar(){
       return (item,guess)=>{
-        let idx =  this.carData.findIndex((el)=>(el.guessId == item.id &&el.guessInfoId == guess.guessInfoId && el.gameTeamId == guess.gameTeamId));
+        let idx =  this.carData.findIndex((el)=>( el.guessInfoId == guess.guessInfoId && el.gameTeamId == guess.gameTeamId));
         return idx >= 0;
       }
     }
@@ -111,14 +112,14 @@ export default {
         teams.push(el.gameTeamName)
       });
       let guessObj = {
-        guessId: item.id,
-        name: item.name,
+        guessId: this.id,
+        name: item.title,
         guessInfoId: guess.guessInfoId,
         gameTeamId: guess.gameTeamId,
         gameTeamName: guess.gameTeamName,
         oddsAmount: guess.oddsAmount,
-        number:0,
-        teams: teams
+        number:0, // 竞猜的下注数量
+        teams: teams,
       }
       this.showPopup = true;
       let idx = this.carData.findIndex((el)=>(el.guessId == guessObj.guessId && el.guessInfoId == guessObj.guessInfoId && el.gameTeamId == guessObj.gameTeamId))
@@ -127,7 +128,7 @@ export default {
         this.carData.push(guessObj)
       }else{
         this.carData.splice(idx,1);
-      }
+      }      
     },
     // 选择局数
     tabChange(tab){

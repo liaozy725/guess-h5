@@ -88,7 +88,7 @@ export default {
         time:this.time
       };
       this.loading = true;
-      this.$http.post('home/guessContentInfo',params).then(res=>{
+      this.$http.post('home/guessContentInfoList',params).then(res=>{
         this.loading = false;
         if(res.retCode==0){
           this.listData = this.listData.concat(res.data);
