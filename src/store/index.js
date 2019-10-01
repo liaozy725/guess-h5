@@ -7,7 +7,9 @@ export default new Vuex.Store({
   state: {
     pageTitle:'',
     userInfo: null,
-    token: ''
+    token: '',
+    showDatePicker:false,
+    time: 24
   },
   mutations: {
     // 设置页面标题
@@ -24,6 +26,14 @@ export default new Vuex.Store({
       state.token = token;
       localStorage.setItem('token',token);
     },
+    // 显示是否显示时间选项
+    setShowDatePicker(state,flag){
+      state.showDatePicker = flag;
+    },
+    // 设置时间
+    changeTime(state,time){
+      state.time = time;
+    }
   },
   actions: {
 

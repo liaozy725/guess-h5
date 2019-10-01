@@ -2,10 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/Layout/Layout'
 import Home from '@/views/Home/Home.vue'
+import store from '@/store/index'
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   // mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -58,3 +59,11 @@ export default new Router({
     },
   ]
 })
+
+router.beforeEach((to,from,next)=>{
+  store.commit('setShowDatePicker',false);
+  store.commit('changeTime',24);
+  next()
+})
+
+export default router;

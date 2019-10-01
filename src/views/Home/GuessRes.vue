@@ -1,12 +1,12 @@
 <template>
   <div class="container guess-history">
     <van-tabs class="tabs games" v-model="activeTab" :border="false">
-      <van-tab>
+      <van-tab name='all'>
         <div slot="title" class="game">
           <img src="../../assets/all.png" alt />
         </div>
       </van-tab>
-      <van-tab v-for="item in gameList">
+      <van-tab v-for="item in gameList" :name="item.id" :key="item.id">
         <div slot="title" class="game">
           <img :src="item.gamePic" alt />
         </div>
@@ -50,21 +50,19 @@ export default {
       activeTab: "",
       loading: false,
       finished: false,
-      listData: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-      gameList:[]
+      listData: [],
+      gameList:[],
+      pageNum:0,
+      pageSize:10,
+      time: this.$store.state.time
     };
   },
   created() {
     this.$store.commit("setPageTitle", "赛果");
+    this.$store.commit("setShowDatePicker", true);
     this.getGameList();
   },
   methods: {
-    getList() {
-      setTimeout(() => {
-        this.listData = this.listData.concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
-        this.loading = false;
-      }, 500);
-    },
     // 更多赛果
     moreRes(item){
       this.$router.push({
@@ -82,6 +80,24 @@ export default {
         }
       })
     },
+    // 获取赛果列表
+    getList(){
+      let params = {
+        token:this.$store.state.token,
+        gameId: this.activeTab == 'all' ? '': this.activeTab,
+        time:this.time
+      };
+      this.loading = true;
+      this.$http.post('home/guessContentInfo',params).then(res=>{
+        this.loading = false;
+        if(res.retCode==0){
+          this.listData = this.listData.concat(res.data);
+          if(res.data.length<this.pageSize){
+            this.finished = true;
+          }
+        }
+      })
+    }
   }
 };
 </script>
