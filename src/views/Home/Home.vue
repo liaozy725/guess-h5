@@ -146,7 +146,7 @@ export default {
         path: "/layout/GuessDetail",
         query:{
           id: item.id,
-          number: item.number
+          // number: item.number
         }
       });
     },

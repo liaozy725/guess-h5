@@ -19,7 +19,7 @@
             <div class="main-r">
               <div v-for="(row,i) in item.userBettingListInfoReps" :key="i">
                 <div class="team">
-                  <img src="../../assets/ig.png" alt />
+                  <img :src="row.teamPic" alt />
                   <span>{{row.gameTeamName}}</span>
                   <img v-if="row.isWin=='win'" src="../../assets/win.png" alt="" class="win">
                 </div>

@@ -18,12 +18,13 @@
       <div class="nav-r">
         <div class="nav-r-box" v-if="$store.state.showDatePicker">
           <div class="nav-r-btn" @click="showTimeMenb = !showTimeMenb">
-            <span>{{$store.state.time}}小时</span>
+            <span>{{$store.state.time == '' ?'全部时间': $store.state.time + '小时'}}</span>
             <img src="../assets/icon-down-y.png" alt="">
           </div>
           <ul class="nav-r-menu" v-show="showTimeMenb">
             <li @click="changeTime(24)">24小时</li>
             <li @click="changeTime(48)">48小时</li>
+            <li @click="changeTime('')">全部时间</li>
             <!-- <li>自定义</li> -->
           </ul>
         </div>
@@ -88,6 +89,7 @@ export default {
   methods: {
     // 登出
     logout() {
+      this.$store.commit('setToken','')
       this.$router.replace("/login");
     },
     // 时间选择回调

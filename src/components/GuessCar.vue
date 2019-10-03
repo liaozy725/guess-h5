@@ -49,6 +49,7 @@
 
 <script>
 import { uploadUserInfo } from '@/utils/utils.js'
+let iconSuccess = require('@/assets/icon-success.png');
 export default {
   props: {
     showPopup: {
@@ -151,7 +152,8 @@ export default {
           this.$toast({
             duration: 2000,
             forbidClick: true, // 禁用背景点击
-            message: "下单成功"
+            message: "下单成功",
+            icon: iconSuccess
           });
           this.uploadUserInfo();
           this.$emit("uploadCarData")

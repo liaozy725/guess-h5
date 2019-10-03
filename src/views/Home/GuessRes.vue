@@ -1,6 +1,6 @@
 <template>
   <div class="container guess-history">
-    <van-tabs class="tabs games" v-model="activeTab" :border="false">
+    <van-tabs class="tabs games" v-model="activeTab" :border="false" @change="gameChange">
       <van-tab name='all'>
         <div slot="title" class="game">
           <img src="../../assets/all.png" alt />
@@ -17,22 +17,22 @@
         <li v-for="(item,index) in listData">
           <div class="list-tit">
             <img src="../../assets/game.png" alt class="tit-logo" />
-            <span>LOL-TCL LPL/BO1 {{index}}</span>
+            <span>{{item.gameName}}-{{item.matchName}} {{item.title}} {{item.name}}</span>
             <span class="more-res" @click="moreRes(item)">更多赛果</span>
           </div>
           <div class="list-main">
             <div class="time">
-              <span>7-28</span>
-              <span>23:00</span>
+              <span>{{item.matchTime | parseTime('{m}-{d}')}}</span>
+              <span>{{item.matchTime | parseTime('{h}:{i}')}}</span>
             </div>
             <div class="main-r">
-              <div v-for="item in 2">
+              <div v-for="team in item.userBettingListInfoReps">
                 <div class="team">
-                  <img src="../../assets/ig.png" alt />
-                  <span>IG</span>
-                  <img src="../../assets/win.png" alt class="win" />
+                  <img :src="team.teamPic" alt />
+                  <span>{{team.gameTeamName}}</span>
+                  <img v-if="team.isWin=='win'" src="../../assets/win.png" alt class="win" />
                 </div>
-                <span class="num" @click="addShopCar(item)">1.33</span>
+                <span class="num">{{team.odds}}</span>
               </div>
             </div>
           </div>
@@ -53,8 +53,7 @@ export default {
       listData: [],
       gameList:[],
       pageNum:0,
-      pageSize:10,
-      time: this.$store.state.time
+      pageSize:20,
     };
   },
   created() {
@@ -62,13 +61,20 @@ export default {
     this.$store.commit("setShowDatePicker", true);
     this.getGameList();
   },
+  computed:{
+    // 时间选中改变
+    changeTimeState(){
+      return this.$store.state.time;
+    },
+  },
   methods: {
     // 更多赛果
     moreRes(item){
       this.$router.push({
-        path:'/layout/GuessDetail',
+        path:'/layout/GuessResDetail',
         query:{
-          type:'guessRes'
+          type:'guessRes',
+          id:item.guessId
         }
       })
     },
@@ -85,18 +91,37 @@ export default {
       let params = {
         token:this.$store.state.token,
         gameId: this.activeTab == 'all' ? '': this.activeTab,
-        time:this.time
+        time:this.$store.state.time,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
       };
       this.loading = true;
       this.$http.post('home/guessContentInfoList',params).then(res=>{
         this.loading = false;
         if(res.retCode==0){
           this.listData = this.listData.concat(res.data);
+          this.pageNum++;
           if(res.data.length<this.pageSize){
             this.finished = true;
           }
         }
       })
+    },
+    // 游戏选中改变
+    gameChange(name){
+      this.listData=[];
+      this.pageNum = 0;
+      this.finished = false;
+      this.getList();
+    }
+  },
+  watch:{
+    // 监听头部时间改变
+    changeTimeState(){
+      this.listData = [];
+      this.finished = false;
+      this.pageNum = 0;
+      this.getList();
     }
   }
 };

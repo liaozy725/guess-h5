@@ -109,3 +109,9 @@
 .van-dialog__confirm span{
   color: #000;
 }
+
+/* toast */
+.van-icon__image{
+  width: 70px;
+  height: 70px;
+}
