@@ -242,11 +242,11 @@ export default {
             &.win::after{
               content: '';
               width: 50px;
+              right: 30px;
               height: 16px;
               position: absolute;
               background: url(~@/assets/win.png) no-repeat;
               background-size: 100% 100%;
-              transform: translateX(60px)
             }
           }
         }
