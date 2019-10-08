@@ -32,24 +32,38 @@ axios.interceptors.request.use(config => {
   return Promise.reject(error);
 });
 
+let iconWarining = require('@/assets/icon-warning.png');
+
 /* 响应处理 */
 axios.interceptors.response.use(response=>{
   try {
     if(response.data.retCode=='0'){
       return response.data;
     }else if(response.data.retCode == '10002') {
-      Toast.fail(response.data.errorMsg || '退出登录');
+      Toast({
+        message:response.data.errorMsg || '退出登录',
+        icon:iconWarining
+      });
       router.replace('/login');
       return response.data;
     }else{
-      Toast.fail(response.data.errorMsg || '');
+      Toast({
+        message:response.data.errorMsg || '请求异常，请于管理员联系',
+        icon:iconWarining
+      });
       return response.data;
     }
   } catch (error) {
-    Toast.fail("处理返回的数据发生异常");
+    Toast({
+      message:'处理返回的数据发生异常',
+      icon:iconWarining
+    });
   }
 },error=>{
-  Toast.fail("网络连接异常,请稍后再试");
+  Toast({
+    message:"网络连接异常,请稍后再试",
+    icon:iconWarining
+  });
   return Promise.reject(error);
 })
 

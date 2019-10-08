@@ -91,3 +91,27 @@
 .van-button__text{
   font-size: 32px;
 }
+/* dialog 样式 */
+.van-dialog__header{
+  font-size: 32px;
+  color: #000;
+  font-weight: bold;
+}
+.van-dialog__message{
+  color: #444;
+}
+.van-dialog__cancel span{
+  color: #333;
+}
+.van-dialog__confirm{
+  background-color: #ffc444;
+}
+.van-dialog__confirm span{
+  color: #000;
+}
+
+/* toast */
+.van-icon__image{
+  width: 70px;
+  height: 70px;
+}

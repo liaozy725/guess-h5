@@ -137,7 +137,7 @@ export default {
                 confirmButtonText: "立即绑定",
                 showConfirmButton: true,
                 showCancelButton: true,
-                confirmButtonColor: "#35333b"
+                // confirmButtonColor: "#35333b"
               })
               .then(() => {
                 // on confirm

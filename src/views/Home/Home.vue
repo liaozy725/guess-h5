@@ -144,7 +144,10 @@ export default {
     guessInfo(item) {
       this.$router.push({
         path: "/layout/GuessDetail",
-        id: item.id
+        query:{
+          id: item.id,
+          // number: item.number
+        }
       });
     },
     // 获取游戏列表
@@ -160,7 +163,6 @@ export default {
       let params = {
         gameId: this.activeGame=="all"?'':this.activeGame,
         playType: this.playType,
-        isSealed: "n",
         pageSize: this.pageSize,
         pageNum: this.pageNum
       };

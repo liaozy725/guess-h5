@@ -46,7 +46,9 @@
           </ul>
           <ul class="list-ul clearfix"  >
             <li class="tit">{{item.title}}</li>
-            <li class="num" v-for="(guess,k) in item.listReps" :key="k" :class="isInGuessCar(item,guess) && 'num-active'" @click.stop="addShopCar(item,guess)">{{guess.oddsAmount}}</li>
+            <li class="num" v-for="(guess,k) in item.listReps" :key="k" :class="guess.isWin">
+              {{guess.oddsAmount}}
+            </li>
             <!-- <li v-for="guess in item.listReps" class="win">{{guess.oddsAmount}}</li> -->
           </ul>
         </div>
@@ -55,12 +57,12 @@
         </div>
       </div>
     </div>
-    <guess-car :carData="carData" :showPopup="showPopup" @popupClose="showPopup=false" @deleteGuess="deleteGuess" @uploadCarData="uploadCarData"></guess-car>
+    <!-- <guess-car :carData="carData" :showPopup="showPopup" @popupClose="showPopup=false" @deleteGuess="deleteGuess" @uploadCarData="uploadCarData"></guess-car> -->
   </div>
 </template>
 
 <script>
-import GuessCar from "@/components/GuessCar.vue";
+// import GuessCar from "@/components/GuessCar.vue";
 export default {
   data() {
     return {
@@ -73,9 +75,9 @@ export default {
       carData:[]
     };
   },
-  components: { GuessCar },
+  // components: { GuessCar },
   created(){
-    this.$store.commit("setPageTitle","竞猜");
+    this.$store.commit("setPageTitle","更多赛果");
     this.getGuessDetail();
   },
   computed:{
@@ -91,10 +93,11 @@ export default {
     // 获取竞猜详情
     getGuessDetail(){      
       let params = {
+        token: this.$store.state.token,
         guessId: this.guessId,
         number: this.activeTab
       }
-      this.$http.post('home/guessInfoList',params).then(res=>{
+      this.$http.post('home/guessContentInfo',params).then(res=>{
         if(res.retCode==0){
           try {
             res.data.team = JSON.parse(res.data.team)
@@ -239,11 +242,11 @@ export default {
             &.win::after{
               content: '';
               width: 50px;
+              right: 30px;
               height: 16px;
               position: absolute;
               background: url(~@/assets/win.png) no-repeat;
               background-size: 100% 100%;
-              transform: translateX(60px)
             }
           }
         }

@@ -2,10 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/Layout/Layout'
 import Home from '@/views/Home/Home.vue'
+import store from '@/store/index'
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   // mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -24,6 +25,8 @@ export default new Router({
         {path:'/layout/GuessDetail',name:'GuessDetail',component: () => import('@/views/Home/GuessDetail.vue') ,meta: { keepAlive: true, title:'竞猜' }},
         // 首页 - 赛果
         {path:'/layout/GuessRes',name:'GuessRes',component: () => import('@/views/Home/GuessRes.vue') ,meta: { keepAlive: true, title:'赛果' }},
+        // 首页 - 赛果详情
+        {path:'/layout/GuessResDetail',name:'GuessResDetail',component: () => import('@/views/Home/GuessResDetail.vue') ,meta: { keepAlive: true, title:'赛果详情' }},
         // 历史竞猜
         {path:'/layout/GuessHistory',name:'GuessHistory',component: () => import('@/views/Home/GuessHistory.vue') ,meta: { keepAlive: true, title:'投注历史' }},
         //用户中心-充值
@@ -58,3 +61,10 @@ export default new Router({
     },
   ]
 })
+
+router.beforeEach((to,from,next)=>{
+  store.commit('setShowDatePicker',false);
+  next()
+})
+
+export default router;

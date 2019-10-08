@@ -16,15 +16,16 @@
         <span>{{$store.state.pageTitle}}</span>
       </div>
       <div class="nav-r">
-        <div class="nav-r-box" v-if="showDatePicker">
-          <div class="nav-r-btn">
-            <span>{{selectTime}}</span>
+        <div class="nav-r-box" v-if="$store.state.showDatePicker">
+          <div class="nav-r-btn" @click="showTimeMenb = !showTimeMenb">
+            <span>{{$store.state.time == '' ?'全部时间': $store.state.time + '小时'}}</span>
             <img src="../assets/icon-down-y.png" alt="">
           </div>
-          <ul class="nav-r-menu">
-            <li>24小时</li>
-            <li>48小时</li>
-            <li>自定义</li>
+          <ul class="nav-r-menu" v-show="showTimeMenb">
+            <li @click="changeTime(24)">24小时</li>
+            <li @click="changeTime(48)">48小时</li>
+            <li @click="changeTime('')">全部时间</li>
+            <!-- <li>自定义</li> -->
           </ul>
         </div>
       </div>
@@ -72,7 +73,6 @@ export default {
   data() {
     return {
       showUserMenu: false,
-      showDatePicker:false,
       showCalendar:false,
       value1: "",
       option1: [
@@ -80,7 +80,7 @@ export default {
         { text: "新款商品", value: 1 },
         { text: "活动商品", value: 2 }
       ],
-      selectTime:"24小时"
+      showTimeMenb:false
     };
   },
   created() {
@@ -89,6 +89,7 @@ export default {
   methods: {
     // 登出
     logout() {
+      this.$store.commit('setToken','')
       this.$router.replace("/login");
     },
     // 时间选择回调
@@ -100,6 +101,13 @@ export default {
     goToRouterLink(link){
       this.showUserMenu = false;
       this.$router.push(link)
+    },
+    // 改变时间
+    changeTime(time){
+      this.showTimeMenb = false;
+      if(time != this.$store.state.time){
+        this.$store.commit('changeTime',time)
+      }
     }
   }
 };
@@ -164,7 +172,6 @@ export default {
         .nav-r-menu{
           position: absolute;
           width: 160px;
-          height: 210px;
           background: #35333b;
           text-align: center;
           top: 66px;
@@ -208,6 +215,7 @@ export default {
 
   .user-menu {
     background-color: #252426;
+    z-index: 9999 !important;
     .header {
       text-align: center;
       padding-top: 45px;

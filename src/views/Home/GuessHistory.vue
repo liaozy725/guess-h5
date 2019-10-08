@@ -1,35 +1,35 @@
 <template>
   <div class="container guess-history">
-    <van-tabs class="tabs" v-model="activeTab" :border="false">
+    <van-tabs class="tabs" v-model="activeTab" :border="false" @change="changeTab">
       <van-tab title="未结算" name="2"></van-tab>
       <van-tab title="已结算" name="1"></van-tab>
     </van-tabs>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getList">
       <ul class="guess-list">
-        <li v-for="(item,index) in listData">
+        <li v-for="(item,index) in listData" :key="index">
           <div class="list-tit">
             <img src="../../assets/game.png" alt class="tit-logo" />
-            <span>LOL-TCL LPL/BO1 {{index}}</span>
+            <span>{{item.title}}</span>
           </div>
           <div class="list-main">
             <div class="time">
-              <span>7-28</span>
-              <span>23:00</span>
+              <span>{{item.matchTime | parseTime('{m}-{d}')}}</span>
+                <span>{{item.matchTime | parseTime('{h}:{i}')}}</span>
             </div>
             <div class="main-r">
-              <div v-for="item in 2">
+              <div v-for="(row,i) in item.userBettingListInfoReps" :key="i">
                 <div class="team">
-                  <img src="../../assets/ig.png" alt />
-                  <span>IG</span>
-                  <img src="../../assets/win.png" alt="" class="win">
+                  <img :src="row.teamPic" alt />
+                  <span>{{row.gameTeamName}}</span>
+                  <img v-if="row.isWin=='win'" src="../../assets/win.png" alt="" class="win">
                 </div>
-                <span class="num">1.33</span>
+                <span class="num">{{row.odds}}</span>
               </div>
             </div>
           </div>
           <div class="list-footer between">
-            <span>投注 500</span>
-            <span>返还 500</span>
+            <span>投注 {{item.number}}</span>
+            <span>返还 {{item.returnNumber}}</span>
           </div>
         </li>
       </ul>
@@ -43,33 +43,40 @@ export default {
   data() {
     return {
       activeTab: 2,
-      loading: false,
-      finished: false,
-      listData: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+      loading:false,//加载中
+      finished:false,//没有更多数据
+      pageNum:0,
+      pageSize:10,
+      listData: []
     };
   },
   created() {
     this.$store.commit("setPageTitle", "投注历史");
-    this.userBettingList();
   },
   methods: {
-    getList() {
-      setTimeout(() => {
-        this.listData = this.listData.concat([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
-        this.loading = false;
-      }, 500)
-    },
     // 获取投注历史
-    userBettingList() {
+    getList() {
       let params = {
         token: this.$store.state.token,
         matchResult: this.activeTab
       }
+      this.loading = true;
       this.$http.post('home/userBettingList', params).then(res => {
         if (res.retCode == 0) {
-          this.listData = res.data;
+          this.listData = this.listData.concat(res.data);
+          this.loading = false;
+          if(res.data.length<this.pageSize){
+            this.finished = true;
+          }
         }
       })
+    },
+    // 改变标签
+    changeTab(){
+      this.pageNum = 0;
+      this.finished = false;
+      this.listData=[];
+      this.getList()
     }
   }
 };
