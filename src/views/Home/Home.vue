@@ -149,9 +149,7 @@ export default {
     },
     // 获取游戏列表
     getGameList() {
-      this.$http
-        .post("home/gameList", { token: this.$store.state.token })
-        .then(res => {
+      this.$http.post("home/gameList", {}).then(res => {
           if (res.retCode == 0) {
             this.gameList = res.data;
           }
@@ -160,7 +158,6 @@ export default {
     // 获取竞猜列表
     getGuessList(gameId) {
       let params = {
-        token: this.$store.state.token,
         gameId: this.activeGame=="all"?'':this.activeGame,
         playType: this.playType,
         isSealed: "n",

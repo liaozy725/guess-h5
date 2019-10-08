@@ -85,7 +85,6 @@ export default {
     // 获取竞猜详情
     getGuessDetail(){      
       let params = {
-        token: this.$store.state.token,
         guessId: this.guessId,
         number: this.activeTab
       }

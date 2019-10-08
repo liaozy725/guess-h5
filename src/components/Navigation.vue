@@ -227,7 +227,7 @@ export default {
       }
       .header-main {
         display: flex;
-        padding: 0 10px;
+        padding: 30px 10px 0;
         .item {
           flex: 1;
           position: relative;
