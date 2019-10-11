@@ -10,7 +10,9 @@ import VueBetterCalendar from 'vue-better-calendar'
 import axios from 'axios'
 import qs from 'qs';
 import {Toast} from 'vant'
+import VueClipboard from 'vue-clipboard2'
 
+Vue.use(VueClipboard);
 
 if (process.env.NODE_ENV == 'production') {
   // 生产环境

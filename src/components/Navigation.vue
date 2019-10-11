@@ -46,10 +46,10 @@
             <p v-if="$store.state.userInfo">{{$store.state.userInfo.userBalance}}</p>
             <p v-else>0</p>
           </div>
-          <!-- <div class="item">
+          <div class="item">
             <label>奖金</label>
             <p>0.0</p>
-          </div> -->
+          </div>
         </div>
       </div>
       <div class="menu-list">

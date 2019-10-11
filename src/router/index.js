@@ -51,6 +51,8 @@ var router = new Router({
         {path:'/layout/ChangePwd',name:'ChangePwd',component: () => import('@/views/User/ChangePwd.vue'),meta: { keepAlive: true ,title:'修改密码',}},
         //用户中心-修改支付密码
         {path:'/layout/ChangePayPwd',name:'ChangePayPwd',component: () => import('@/views/User/ChangePayPwd.vue'),meta: { keepAlive: true ,title:'修改支付密码',}},
+        //用户中心-修改支付密码
+        {path:'/layout/Bonus',name:'Bonus',component: () => import('@/views/User/Bonus.vue'),meta: { keepAlive: true ,title:'奖金',}},
       ]
     },
     /*******登录********/
