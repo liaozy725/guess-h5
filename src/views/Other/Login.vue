@@ -52,9 +52,9 @@ export default {
   data() {
     return {
       signIn: {
-        loginAccount: "leo123456",
-        loginPassword: "123456",
-        confirmPassword: "123456",
+        loginAccount: "",
+        loginPassword: "",
+        confirmPassword: "",
         invitationCode: ""
       },
       loginForm: {
