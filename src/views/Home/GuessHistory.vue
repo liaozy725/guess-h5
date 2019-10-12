@@ -13,11 +13,13 @@
           </div>
           <div class="list-main">
             <div class="time">
-              <span>{{item.matchTime | parseTime('{m}-{d}')}}</span>
+              <div>
+                <span>{{item.matchTime | parseTime('{m}-{d}')}}</span>
                 <span>{{item.matchTime | parseTime('{h}:{i}')}}</span>
+              </div>
             </div>
             <div class="main-r">
-              <div v-for="(row,i) in item.userBettingListInfoReps" :key="i">
+              <div v-for="(row,i) in item.userBettingListInfoReps" :key="i" :class="row.isBetting == 'y' && 'betting'">
                 <div class="team">
                   <img :src="row.teamPic" alt />
                   <span>{{row.gameTeamName}}</span>
@@ -43,10 +45,10 @@ export default {
   data() {
     return {
       activeTab: 2,
-      loading:false,//加载中
-      finished:false,//没有更多数据
-      pageNum:0,
-      pageSize:10,
+      loading: false,//加载中
+      finished: false,//没有更多数据
+      pageNum: 0,
+      pageSize: 10,
       listData: []
     };
   },
@@ -65,17 +67,17 @@ export default {
         if (res.retCode == 0) {
           this.listData = this.listData.concat(res.data);
           this.loading = false;
-          if(res.data.length<this.pageSize){
+          if (res.data.length < this.pageSize) {
             this.finished = true;
           }
         }
       })
     },
     // 改变标签
-    changeTab(){
+    changeTab() {
       this.pageNum = 0;
       this.finished = false;
-      this.listData=[];
+      this.listData = [];
       this.getList()
     }
   }
@@ -112,9 +114,11 @@ export default {
         .time {
           width: 108px;
           text-align: center;
-          height: 148px;
           border-right: 1px solid #8b6c2b;
           padding-top: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           span {
             font-size: 20px;
             color: #fff1d3;
@@ -155,8 +159,11 @@ export default {
               line-height: 74px;
               // border-left: 1px solid #8b6c2b /*no*/;
             }
-            &:first-child {
-              border-bottom: 1px solid #8b6c2b /*no*/;
+            &:not(:first-child) {
+              border-top: 1px solid #8b6c2b /*no*/;
+            }
+            &.betting{
+              background: #8b6c2b;
             }
           }
         }

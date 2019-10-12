@@ -34,7 +34,7 @@
     </header>
 
     <van-tabs class="tabs" v-model="activeTab" :border="false" @change="tabChange">
-      <van-tab name="all" title="总竞猜" :key="index"></van-tab>
+      <van-tab name="all" title="总竞猜"></van-tab>
       <van-tab v-for="index in guessData.number" :name="index" :title="'第' + index + '局'" :key="index"></van-tab>
     </van-tabs>
 
@@ -45,14 +45,17 @@
             <li class="tit">{{item.number>0?'第'+ item.number + '局' : ''}}</li>
             <li v-for="(guess,i) in item.listReps" :key="i">{{guess.gameTeamName}}</li>
           </ul>
-          <ul class="list-ul clearfix"  >
+          <ul class="list-ul clearfix">
             <li class="tit">{{item.title}}</li>
-            <li class="num" v-for="(guess,k) in item.listReps" :key="k" :class="isInGuessCar(item,guess) && 'num-active'" @click.stop="addShopCar(item,guess)">{{guess.oddsAmount}}</li>
-            <!-- <li v-for="guess in item.listReps" class="win">{{guess.oddsAmount}}</li> -->
+            <li class="num" v-for="(guess,k) in item.listReps" :key="k" :class="isInGuessCar(item,guess) && 'num-active'" @click.stop="addShopCar(item,guess)">
+              {{guess.oddsAmount}}
+              <img src="../../assets/icon-dis.png" class="disable-icon" v-if="guess.isSealed=='y'"/>
+            </li>
+
           </ul>
         </div>
         <div class="over-jt" v-if="item.listReps.length>3">
-          <img src="../../assets/icon-sjx.png" alt /> 
+          <img src="../../assets/icon-sjx.png" alt />
         </div>
       </div>
     </div>
@@ -69,45 +72,45 @@ export default {
       activeTab: parseInt(this.$route.query.number) || '',
       id: this.$route.query.id,
       list: [1, 2, 3, 4, 5, 6, 7, 8],
-      guessId:this.$route.query.id,
-      guessData:{},
-      carData:[]
+      guessId: this.$route.query.id,
+      guessData: {},
+      carData: []
     };
   },
   components: { GuessCar },
-  created(){
-    this.$store.commit("setPageTitle","竞猜");
+  created() {
+    this.$store.commit("setPageTitle", "竞猜");
     this.getGuessDetail();
   },
-  computed:{
+  computed: {
     // 判断是否在里面
-    isInGuessCar(){
-      return (item,guess)=>{
-        let idx =  this.carData.findIndex((el)=>( el.weiYiZiDuan == guess.weiYiZiDuan));
+    isInGuessCar() {
+      return (item, guess) => {
+        let idx = this.carData.findIndex((el) => (el.weiYiZiDuan == guess.weiYiZiDuan));
         return idx >= 0;
       }
     }
   },
-  methods:{
+  methods: {
     // 获取竞猜详情
-    getGuessDetail(){      
+    getGuessDetail() {
       let params = {
         guessId: this.guessId,
-        number: this.activeTab == 'all'? '': this.activeTab
+        number: this.activeTab == 'all' ? '' : this.activeTab
       }
-      this.$http.post('home/guessInfoList',params).then(res=>{
-        if(res.retCode==0){
+      this.$http.post('home/guessInfoList', params).then(res => {
+        if (res.retCode == 0) {
           try {
             res.data.team = JSON.parse(res.data.team)
           } catch (error) {
-            
+
           }
           this.guessData = res.data;
         }
       })
     },
     // 添加购物车
-    addShopCar(item,guess) {
+    addShopCar(item, guess) {
       let teams = [];
       item.listReps.forEach(el => {
         teams.push(el.gameTeamName)
@@ -119,21 +122,21 @@ export default {
         gameTeamId: guess.gameTeamId,
         gameTeamName: guess.gameTeamName,
         oddsAmount: guess.oddsAmount,
-        number:0, // 竞猜的下注数量
+        number: 0, // 竞猜的下注数量
         teams: teams,
         weiYiZiDuan: guess.weiYiZiDuan
       }
       this.showPopup = true;
-      let idx = this.carData.findIndex((el)=>(el.weiYiZiDuan == guessObj.weiYiZiDuan))
+      let idx = this.carData.findIndex((el) => (el.weiYiZiDuan == guessObj.weiYiZiDuan))
 
-      if(idx<0){
+      if (idx < 0) {
         this.carData.push(guessObj)
-      }else{
-        this.carData.splice(idx,1);
-      }      
+      } else {
+        this.carData.splice(idx, 1);
+      }
     },
     // 选择局数
-    tabChange(tab){
+    tabChange(tab) {
       this.getGuessDetail();
     },
     // 购物车删除回调
@@ -141,7 +144,7 @@ export default {
       this.carData.splice(res.index, 1);
     },
     // 更新购物车数据
-    uploadCarData(){
+    uploadCarData() {
       this.carData = [];
     },
   }
@@ -151,6 +154,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/style/color.scss";
 .container {
+  
   .header {
     height: 340px;
     background: #19181a;
@@ -218,6 +222,7 @@ export default {
     }
   }
   .table-box {
+    padding-bottom: 100px;
     .tables {
       margin-bottom: 30px;
       .my-table {
@@ -234,17 +239,17 @@ export default {
             background: $deep-yellow;
             font-size: 24px;
             color: $gray;
-            &.win{
+            &.win {
               position: relative;
             }
-            &.win::after{
-              content: '';
+            &.win::after {
+              content: "";
               width: 50px;
               height: 16px;
               position: absolute;
               background: url(~@/assets/win.png) no-repeat;
               background-size: 100% 100%;
-              transform: translateX(60px)
+              transform: translateX(60px);
             }
           }
         }
@@ -253,20 +258,24 @@ export default {
             height: 84px;
             color: $black;
             background: $yellow;
-            &.num-active{
-              background: rgba(255,196,68,0.7);
+            &.num-active {
+              background: rgba(255, 196, 68, 0.7);
               color: $black;
             }
           }
         }
-        .list-ul{
-          li{
-            &.num-active{
-              background: rgba(255,196,68,0.7);
+        .list-ul {
+          li {
+            position: relative;
+            &.num-active {
+              background: rgba(255, 196, 68, 0.7);
               color: $black;
             }
+            .disable-icon {
+              position: absolute;
+              right: 0;
+            }
           }
-          
         }
         .tit {
           flex: 0 0 244px !important;

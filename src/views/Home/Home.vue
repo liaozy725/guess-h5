@@ -34,6 +34,7 @@
           <div class="list-tit">
             <img :src="item.gamePic" alt class="tit-logo" />
             <span>{{item.gameName}}-{{item.matchName}}</span>
+            <i class="icon-number">+{{item.number}}</i>
           </div>
           <div class="list-main">
             <div class="time">
@@ -47,8 +48,10 @@
                 <div class="team">
                   <img :src="guess.teamPic" alt />
                   <span>{{guess.gameTeamName}}</span>
+                  
                 </div>
                 <span class="num" @click.stop="addShopCar(item,guess)">{{guess.oddsAmount}}</span>
+                <img src="../../assets/icon-dis.png" class="disable-icon" v-if="guess.isSealed=='y'"/>
               </div>
             </div>
           </div>
@@ -62,6 +65,7 @@
 
 <script>
 import GuessCar from "@/components/GuessCar.vue";
+import {uploadUserInfo} from '@/utils/utils.js';
 export default {
   name: "home",
   data() {
@@ -87,6 +91,9 @@ export default {
     this.$store.commit("setPageTitle", "首页");
     this.getGameList();
     // this.getGuessList();
+    if(this.$store.state.token){
+      this.uploadUserInfo();
+    }
   },
   mounted() {
     this.baseHeight = document.getElementById("navigation").offsetHeight;
@@ -102,6 +109,7 @@ export default {
     }
   },
   methods: {
+    uploadUserInfo:uploadUserInfo,
     // 页面滚动
     onPageScroll(e) {
       this.isFixed = e.target.scrollTop > this.fixedHeight - 1;
@@ -117,6 +125,9 @@ export default {
     },
     // 添加购物车
     addShopCar(item,guess) {
+      if(guess.isSealed=='y'){
+        return;
+      }
       let teams = [];
       item.homeListReps.forEach(el => {
         teams.push(el.gameTeamName)
@@ -294,6 +305,15 @@ export default {
         span {
           font-size: 20px;
           color: #000;
+          flex: 1;
+        }
+        .icon-number{
+          font-size: 22px;
+          color: #000;
+          padding: 0 15px;
+          border: 1px solid #000 /*no*/;
+          text-align: center;
+          border-radius: 6px;
         }
       }
       .list-main {
@@ -316,6 +336,7 @@ export default {
         }
         .main-r {
           flex: 1;
+          position: relative;
           > div {
             height: 74px;
             display: flex;
@@ -351,6 +372,10 @@ export default {
                 color: $black;
               }
             }
+          }
+          .disable-icon{
+            position: absolute;
+            right: 0;
           }
         }
       }

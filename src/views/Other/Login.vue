@@ -47,7 +47,9 @@
 </template>
 
 <script>
-import {uploadUserInfo} from '@/utils/utils.js';
+import { uploadUserInfo } from '@/utils/utils.js';
+let iconSuccess = require('@/assets/icon-success.png');
+let iconWarning = require('@/assets/icon-warning.png');
 export default {
   data() {
     return {
@@ -64,9 +66,9 @@ export default {
       isRegister: false // 是否注册
     };
   },
-  created() {},
+  created() { },
   methods: {
-    uploadUserInfo:uploadUserInfo,//获取用户详情
+    uploadUserInfo: uploadUserInfo,//获取用户详情
     // 限制输入英文 数字
     onInputChange(key) {
       this.signIn[key] = this.signIn[key].replace(/[^\a-\z\A-\Z0-9]/g, "");
@@ -74,42 +76,44 @@ export default {
     // 注册
     registerFun() {
       if (!this.signIn.loginAccount || this.signIn.loginAccount.length < 4) {
-        
+
         this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的用户名"
         });
-        return 
+        return
       }
       if (!this.signIn.loginPassword || this.signIn.loginPassword.length < 6) {
         this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的密码"
         });
-        return 
+        return
       }
       if (this.signIn.loginPassword != this.signIn.confirmPassword) {
         this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "密码不一致"
         });
-        return 
+        return
       }
-      this.$http
-        .post("account/register", JSON.stringify(this.signIn))
-        .then(res => {
-          if (res.retCode == 0) {
-            this.$toast.success({
-              duration: 1000,
-              forbidClick: true, // 禁用背景点击
-              message: "注册成功！"
-            });
-            this.isRegister = false;
-          }
-        });
+      this.$http.post("account/register", JSON.stringify(this.signIn)).then(res => {
+        if (res.retCode == 0) {
+          this.$toast.success({
+            duration: 1000,
+            icon: iconSuccess,
+            forbidClick: true, // 禁用背景点击
+            message: "注册成功！"
+          });
+          this.isRegister = false;
+        }
+      });
     },
     // 登录
     login() {
@@ -119,10 +123,11 @@ export default {
       ) {
         this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的用户名"
         });
-        return 
+        return
       }
       if (
         !this.loginForm.loginPassword ||
@@ -130,26 +135,25 @@ export default {
       ) {
         this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的密码"
         });
-        return 
+        return
       }
       this.$http.post("account/login", this.loginForm).then(res => {
         if (res.retCode == 0) {
           this.$store.commit("setToken", res.data.token);
           this.uploadUserInfo();
           this.$router.replace("/layout/home");
-         // this.getUserInfo(res.data.token)
         }
       });
     },
     //获取用户信息
-    getUserInfo(token){
-      this.$http.post("userInfo/userInfo", {token:token}).then(res => {
+    getUserInfo(token) {
+      this.$http.post("userInfo/userInfo", { token: token }).then(res => {
         if (res.retCode == 0) {
           this.$store.commit("setUserInfo", res.data);
-          
         }
       });
     }

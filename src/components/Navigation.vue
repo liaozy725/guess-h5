@@ -33,8 +33,9 @@
 
     <van-popup class="user-menu" v-model="showUserMenu" position="right" :style="{ width: '50%',height: '100%'}">
       <div class="header">
-        <img src="../assets/ig.png" alt />
+        <img src="../assets/user.png" alt />
         <p class="name" v-if="$store.state.userInfo">{{$store.state.userInfo.accountLogin||''}}</p>
+        <p class="name" v-else>暂未登录</p>
         <div class="header-main">
           <div class="item">
             <label>余额</label>
@@ -46,9 +47,10 @@
             <p v-if="$store.state.userInfo">{{$store.state.userInfo.userBalance}}</p>
             <p v-else>0</p>
           </div>
-          <div class="item">
+          <div @click="goToRouterLink('/layout/Bonus')" class="item">
             <label>奖金</label>
-            <p>0.0</p>
+            <p v-if="$store.state.userInfo">{{$store.state.userInfo.userPrize}}</p>
+            <p v-else>0</p>
           </div>
         </div>
       </div>
@@ -89,7 +91,9 @@ export default {
   methods: {
     // 登出
     logout() {
+      localStorage.clear();
       this.$store.commit('setToken','')
+      this.$store.commit('setUserInfo',null)
       this.$router.replace("/login");
     },
     // 时间选择回调
@@ -108,7 +112,7 @@ export default {
       if(time != this.$store.state.time){
         this.$store.commit('changeTime',time)
       }
-    }
+    },
   }
 };
 </script>
@@ -222,7 +226,6 @@ export default {
       img {
         width: 145px;
         height: 145px;
-        background-color: #7b757f;
         border: solid 2px $yellow;
         border-radius: 50%;
       }

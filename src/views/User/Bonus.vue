@@ -3,44 +3,42 @@
     <div class="header">
       <div class="item">
         <span>可提现奖金</span>
-        <p>500.00<span>元</span></p>
+        <p v-if="$store.state.userInfo">{{$store.state.userInfo.userPrize}}<span>元</span></p>
       </div>
       <div class="item">
         <span>冻结（竞猜结束后解冻）</span>
-        <p>50.24<span>元</span></p>
+        <p v-if="$store.state.userInfo">{{$store.state.userInfo.userFrozenPrize}}<span>元</span></p>
       </div>
       <router-link to="/layout/withdraw" class="header-btn">
         全部提现
       </router-link>
     </div>
     <div class="code">
-      <span class="code-txt">我的邀请码：QRFJJEOIJOIASDFIO</span>
-      <span class="code-btn" v-clipboard:copy="'QRFJJEOIJOIASDFIO'" v-clipboard:success="onCopySuccess" v-clipboard:error="onCopyError">复制</span>
+      <span class="code-txt">我的邀请码：{{$store.state.userInfo.invitationCode}}</span>
+      <span class="code-btn" v-clipboard:copy="$store.state.userInfo.invitationCode" v-clipboard:success="onCopySuccess" v-clipboard:error="onCopyError">复制</span>
     </div>
     <div class="list-box">
       <div class="nav">
-        <span class="active" @click="changeNav()">历史记录</span>
-        <span @click="changeNav()">我的下属</span>
+        <span :class="activeNav==1&&'active'" @click="changeNav(1)">历史记录</span>
+        <span :class="activeNav==2&&'active'" @click="changeNav(2)">我的下属</span>
       </div>
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getList">
         <!-- 历史记录 -->
-        <!-- <ul class="list list-history">
-          <li v-for="item in 2">
+        <ul class="list list-history" v-if="activeNav==1">
+          <li v-for="item in listData">
             <p class="info">
-              <span class="time">2019/12/23 23:23</span>
-              <span>可提</span>
+              <span class="time">{{item.createTime|parseTime}}</span>
+              <span>{{matchResultObj[item.matchResult]}}</span>
             </p>
-            <p>
-              某某某下注某某比赛100元，获得奖金2元
-            </p>
+            <p>{{item.remark}}</p>
           </li>
-        </ul> -->
+        </ul>
         <!-- 我的下属 -->
-        <ul class="list list-team">
-          <li v-for="item in 2">
-            <span>王小明</span>
-            <span>一级下属</span>
-            <span>总奖金2345元</span>
+        <ul class="list list-team" v-else>
+          <li v-for="item in listData">
+            <span>{{item.accountLogin}}</span>
+            <span>{{levelObj[item.level]}}</span>
+            <span>总奖金{{item.userPrize}}元</span>
           </li>
         </ul>
       </van-list>
@@ -53,7 +51,13 @@ export default {
   data() {
     return {
       loading: false,
-      finished: true,
+      finished: false,
+      pageNum: 0,
+      pageSize: 10,
+      activeNav: 1,
+      listData: [],
+      levelObj: { 1: '一级下属', 2: '二级下属' },
+      matchResultObj: { 1: '可提', 2: '冻结' }
     }
   },
   created() {
@@ -62,19 +66,39 @@ export default {
   methods: {
     // 获取列表
     getList() {
-
+      var params = {
+        token: this.$store.state.token,
+        pageSize: this.pageSize,
+        pageNum: this.pageNum,
+      }
+      this.loading = true;
+      let url = this.activeNav == 1 ? 'userPrizeInfo/list' : 'userPrizeInfo/levelList';
+      this.$http.post(url, params).then(res => {
+        if (res.retCode == 0) {
+          this.listData = this.listData.concat(res.data);
+          this.pageNum++;
+          if (res.data.length < this.pageSize) {
+            this.finished = true;
+          }
+        }
+        this.loading = false;
+      });
     },
     // 切换导航
-    changeNav(nav){
-      
+    changeNav(nav) {
+      this.activeNav = nav;
+      this.pageNum = 0;
+      this.finished = false;
+      this.listData = [];
+      this.getList();
     },
     // 复制成功
     onCopySuccess() {
       this.$toast({ duration: 2000, forbidClick: true, message: "复制成功" });
     },
     // 复制失败
-    onCopyError(){
-      
+    onCopyError() {
+
     }
   }
 }
@@ -136,8 +160,10 @@ export default {
       span {
         font-size: 24px;
         margin-right: 48px;
+        opacity: 0.5;
         &.active {
           font-weight: bold;
+          opacity: 1;
         }
       }
     }
