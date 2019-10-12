@@ -71,6 +71,7 @@
 </template>
 
 <script>
+let iconWarning = require('@/assets/icon-warning.png');
 export default {
   data() {
     return {
@@ -103,6 +104,17 @@ export default {
     },
     // 跳转页面
     goToRouterLink(link){
+      if(!this.$store.state.userInfo){
+        return this.$dialog.confirm({
+          title:'提示',
+          message: "您暂未登录，请先登录",
+          confirmButtonText:'立即登录'
+        }).then(()=>{
+          this.$router.replace('/login')
+        }).catch(()=>{
+          this.showUserMenu = false;
+        })
+      }
       this.showUserMenu = false;
       this.$router.push(link)
     },

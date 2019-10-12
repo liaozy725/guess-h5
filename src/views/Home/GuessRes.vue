@@ -17,13 +17,15 @@
         <li v-for="(item,index) in listData">
           <div class="list-tit">
             <img src="../../assets/game.png" alt class="tit-logo" />
-            <span>{{item.gameName}}-{{item.matchName}} {{item.title}} {{item.name}}</span>
+            <span>{{item.gameName}}-{{item.matchName}} {{item.title}}</span>
             <span class="more-res" @click="moreRes(item)">更多赛果</span>
           </div>
           <div class="list-main">
             <div class="time">
-              <span>{{item.matchTime | parseTime('{m}-{d}')}}</span>
-              <span>{{item.matchTime | parseTime('{h}:{i}')}}</span>
+              <div>
+                <span>{{item.matchTime | parseTime('{m}-{d}')}}</span>
+                <span>{{item.matchTime | parseTime('{h}:{i}')}}</span>
+              </div>
             </div>
             <div class="main-r">
               <div v-for="team in item.userBettingListInfoReps">
@@ -51,9 +53,9 @@ export default {
       loading: false,
       finished: false,
       listData: [],
-      gameList:[],
-      pageNum:0,
-      pageSize:20,
+      gameList: [],
+      pageNum: 0,
+      pageSize: 20,
     };
   },
   created() {
@@ -61,63 +63,63 @@ export default {
     this.$store.commit("setShowDatePicker", true);
     this.getGameList();
   },
-  computed:{
+  computed: {
     // 时间选中改变
-    changeTimeState(){
+    changeTimeState() {
       return this.$store.state.time;
     },
   },
   methods: {
     // 更多赛果
-    moreRes(item){
+    moreRes(item) {
       this.$router.push({
-        path:'/layout/GuessResDetail',
-        query:{
-          type:'guessRes',
-          id:item.guessId
+        path: '/layout/GuessResDetail',
+        query: {
+          type: 'guessRes',
+          id: item.guessId
         }
       })
     },
     // 获取游戏列表
-    getGameList(){
-      this.$http.post('home/gameList',{token:this.$store.state.token}).then(res=>{
-        if(res.retCode==0){
+    getGameList() {
+      this.$http.post('home/gameList', { token: this.$store.state.token }).then(res => {
+        if (res.retCode == 0) {
           this.gameList = res.data;
         }
       })
     },
     // 获取赛果列表
-    getList(){
+    getList() {
       let params = {
-        token:this.$store.state.token,
-        gameId: this.activeTab == 'all' ? '': this.activeTab,
-        time:this.$store.state.time,
+        token: this.$store.state.token,
+        gameId: this.activeTab == 'all' ? '' : this.activeTab,
+        time: this.$store.state.time,
         pageNum: this.pageNum,
         pageSize: this.pageSize
       };
       this.loading = true;
-      this.$http.post('home/guessContentInfoList',params).then(res=>{
+      this.$http.post('home/guessContentInfoList', params).then(res => {
         this.loading = false;
-        if(res.retCode==0){
+        if (res.retCode == 0) {
           this.listData = this.listData.concat(res.data);
           this.pageNum++;
-          if(res.data.length<this.pageSize){
+          if (res.data.length < this.pageSize) {
             this.finished = true;
           }
         }
       })
     },
     // 游戏选中改变
-    gameChange(name){
-      this.listData=[];
+    gameChange(name) {
+      this.listData = [];
       this.pageNum = 0;
       this.finished = false;
       this.getList();
     }
   },
-  watch:{
+  watch: {
     // 监听头部时间改变
-    changeTimeState(){
+    changeTimeState() {
       this.listData = [];
       this.finished = false;
       this.pageNum = 0;
@@ -172,7 +174,7 @@ export default {
           color: #000;
           flex: 1;
         }
-        .more-res{
+        .more-res {
           text-align: right;
           flex: none;
           height: 53px;
@@ -185,9 +187,11 @@ export default {
         .time {
           width: 108px;
           text-align: center;
-          height: 148px;
           border-right: 1px solid #8b6c2b;
           padding-top: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           span {
             font-size: 20px;
             color: #fff1d3;
@@ -228,8 +232,8 @@ export default {
               line-height: 74px;
               border-left: 1px solid #8b6c2b /*no*/;
             }
-            &:first-child {
-              border-bottom: 1px solid #8b6c2b /*no*/;
+            &:not(:first-child) {
+              border-top: 1px solid #8b6c2b /*no*/;
             }
           }
         }
@@ -250,10 +254,10 @@ export default {
   flex-basis: 106px !important;
   flex: none;
 }
-.van-tab .game img{
+.van-tab .game img {
   opacity: 0.4;
 }
-.van-tab--active .game img{
+.van-tab--active .game img {
   opacity: 1;
 }
 </style>

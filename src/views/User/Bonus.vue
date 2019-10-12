@@ -9,7 +9,7 @@
         <span>冻结（竞猜结束后解冻）</span>
         <p v-if="$store.state.userInfo">{{$store.state.userInfo.userFrozenPrize}}<span>元</span></p>
       </div>
-      <router-link to="/layout/withdraw" class="header-btn">
+      <router-link :to="{path:'/layout/withdraw',query:{type:'prize'}}" class="header-btn">
         全部提现
       </router-link>
     </div>

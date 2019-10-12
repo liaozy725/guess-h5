@@ -126,6 +126,17 @@ export default {
     },
     // 确认投注
     submit(){
+      if(!this.$store.state.userInfo){
+        return this.$dialog.confirm({
+          title:'提示',
+          message: "您暂未登录，请先登录",
+          confirmButtonText:'立即登录'
+        }).then(()=>{
+          this.$router.replace('/login')
+        }).catch(()=>{
+          this.showUserMenu = false;
+        })
+      }
       let guessIds=[],guessInfoIds=[],gameTeamIds=[],numbers=[],bettings=[];
       this.carData.forEach(el => {
         if(el.number>0){

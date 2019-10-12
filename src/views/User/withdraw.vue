@@ -258,11 +258,11 @@ export default {
     },
     //点击确认支付
     submit() {
-      
       let params = {
         token: this.$store.state.token,
         payPassword: this.password, //支付密码
         amount: parseFloat(this.price), //提现额度
+        type: this.$route.query.type=='prize'?'prize':'balance'
       };
       this.$http.post("userWithdrawDetail/save", params).then(res => {
         if (res.retCode == 0) {
