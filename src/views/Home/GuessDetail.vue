@@ -111,6 +111,9 @@ export default {
     },
     // 添加购物车
     addShopCar(item, guess) {
+      if(guess.isSealed=='y'){
+        return;
+      }
       let teams = [];
       item.listReps.forEach(el => {
         teams.push(el.gameTeamName)
@@ -273,7 +276,8 @@ export default {
             }
             .disable-icon {
               position: absolute;
-              right: 0;
+              right: 20px;
+              height: 32px;
             }
           }
         }

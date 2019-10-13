@@ -101,6 +101,7 @@
 <script>
 import QRCode from 'qrcodejs2';//二维码生成插件
 import {uploadUserInfo} from '@/utils/utils.js';
+let iconSuccess = require('@/assets/icon-success.png');
 export default {
   name: "pay",
   data() {
@@ -193,7 +194,6 @@ export default {
     },
     //点击确认充值
     submit() {
-      
       let params={
         token:this.$store.state.token,
         transferType:this.activeTab,//充值方式
@@ -211,14 +211,22 @@ export default {
     },
     //点击支付完成按钮
     successBtn() {
-      this.$router.replace({ path: "/layout/home" });
+      let params = {
+        token:this.$store.state.token,
+        orderNo:this.orderNo
+      }
+      this.$http.post('orderInfo/paid',params).then(res=>{
+        if(res.retCode == 0){
+          this.$toast.success({duration: 1000,icon: iconSuccess,forbidClick: true, message: "支付成功！"});
+          this.$router.replace({ path: "/layout/home" });
+        }
+      })
     },
     //关闭二维码弹框
     clearCodeModel(){
       this.showCode=false;
       this.isFinish=true;
       this.showShopCar = true;
-      this.orderNo=null;
     }
   }
 };
