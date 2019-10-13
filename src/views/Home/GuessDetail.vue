@@ -42,7 +42,7 @@
       <div class="tables" :class="item.listReps.length>3?'my-table-over':''" v-for="(item,index) in guessData.guessInfoListReps" :key="index">
         <div class="my-table">
           <ul class="title-ul clearfix">
-            <li class="tit">{{item.number>0?'第'+ item.number + '局' : ''}}</li>
+            <li class="tit">{{item.number>0?'第'+ item.number + '局' : '总'}}</li>
             <li v-for="(guess,i) in item.listReps" :key="i">{{guess.gameTeamName}}</li>
           </ul>
           <ul class="list-ul clearfix">
