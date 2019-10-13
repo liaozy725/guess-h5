@@ -3,11 +3,11 @@
     <router-link to="/layout/BankcardInfo">
       <div class="card-box between">
         <div class="card-box-l">
-          <img src="../../assets/icon-card.png" alt="">
+          <img src="../../assets/icon-card.png" alt />
           <span>查看我的银行卡</span>
         </div>
         <div class="card-box-r">
-          <img src="../../assets/icon-down.png" alt="">
+          <img src="../../assets/icon-down.png" alt />
         </div>
       </div>
     </router-link>
@@ -19,21 +19,21 @@
         <div class="card-num" v-if="bankInfo">{{bankInfo.bankNo|getBankStr}}</div>
         <!-- <div class="img-box">
           <img src="../../assets/icon-down.png" alt="">
-        </div> -->
+        </div>-->
       </div>
       <div class="content-body content-c">
         <p class="content-label">提现金额</p>
         <div class="content-c-input between">
           <van-field readonly clickable class="input-box" :value="price" placeholder="请输入提现金额" @touchstart.native.stop="show = true" />
           <div class="img-box" @click="clearPrice">
-            <img src="../../assets/icon-close2.png" alt="">
+            <img src="../../assets/icon-close2.png" alt />
           </div>
         </div>
       </div>
       <div class="content-body content-b between">
         <p class="content-label" v-if="userInfo">当前可提现金额 {{userInfo.userBalance||0}}</p>
-        
-        <div class=""></div>
+
+        <div class></div>
         <div class="btn" @click="allWithdraw">全部提现</div>
       </div>
     </div>
@@ -48,7 +48,7 @@
     <van-overlay :show="showShopCar" @click="clearModel" />
     <div class="model-box" v-if="showShopCar">
       <!-- <div class="title-box">支付</div>
-      <div class="close-btn" @click="clearModel">×</div> -->
+      <div class="close-btn" @click="clearModel">×</div>-->
       <div class="model-text between">
         <div class="model-label">提现卡号：</div>
         <div class="model-label" v-if="bankInfo">{{bankInfo.bankNo|getBankStr}}</div>
@@ -61,7 +61,7 @@
         <div class="model-label">支付密码：</div>
         <div class="password-box">
           <!-- 密码输入框 -->
-          <van-password-input :value="password" :length="6" :gutter="10"  :focused="showKeyboard" @focus="showKeyboard = true" />
+          <van-password-input :value="password" :length="6" :gutter="10" :focused="showKeyboard" @focus="showKeyboard = true" />
         </div>
       </div>
       <!-- <div class="sure-big-btn" @click="submit">确认提现</div> -->
@@ -77,12 +77,11 @@
     <!-- 支付键盘 -->
     <van-number-keyboard :show="showKeyboard" @input="onInput" @delete="onDelete" @blur="showKeyboard = false" />
     <!-- 无银行卡提示弹框 -->
-
   </div>
 </template>
 
 <script>
-import {uploadUserInfo} from '@/utils/utils.js';
+import { uploadUserInfo } from "@/utils/utils.js";
 export default {
   name: "withdraw",
   data() {
@@ -98,26 +97,25 @@ export default {
       password: "", //支付密码
       showKeyboard: false, //控制支付密码键盘
       bankInfo: null, //银行卡信息
-      userInfo:this.$store.state.userInfo,//用户信息
+      userInfo: this.$store.state.userInfo //用户信息
     };
   },
   created() {
     this.$store.commit("setPageTitle", "提现");
-   
   },
   mounted() {
     this.getBankInfo(); //银行卡信息
   },
-  watch:{
-    password(nVal,oVal){
-      if(nVal.length>=6){
-        console.log(nVal)
+  watch: {
+    password(nVal, oVal) {
+      if (nVal.length >= 6) {
+        console.log(nVal);
         this.submit();
       }
-    },
+    }
   },
   methods: {
-    uploadUserInfo:uploadUserInfo,//获取用户详情
+    uploadUserInfo: uploadUserInfo, //获取用户详情
     //获取银行卡信息
     getBankInfo() {
       var params = {
@@ -136,7 +134,7 @@ export default {
                 cancelButtonText: "暂不提现",
                 confirmButtonText: "立即绑定",
                 showConfirmButton: true,
-                showCancelButton: true,
+                showCancelButton: true
                 // confirmButtonColor: "#35333b"
               })
               .then(() => {
@@ -159,7 +157,7 @@ export default {
         //无支付密码
         this.$dialog
           .confirm({
-            title: "标题",
+            title: "提示",
             message: "您暂未设置支付密码",
             cancelButtonText: "暂不提现",
             confirmButtonText: "立即设置",
@@ -186,14 +184,13 @@ export default {
     //点击全部提现
     allWithdraw() {
       // if(this.userInfo.userBalance>0){
-        
+
       // }
-      if(this.userInfo&&this.userInfo.userBalance){
-        this.price = this.userInfo.userBalance+'';
-      }else{
-        this.price ='0';
+      if (this.userInfo && this.userInfo.userBalance) {
+        this.price = this.userInfo.userBalance + "";
+      } else {
+        this.price = "0";
       }
-      
     },
     //选择支付方式
     changePay(num) {
@@ -229,17 +226,21 @@ export default {
       if (!!this.price) {
         if (parseFloat(this.price) <= 100000) {
           if (parseFloat(this.price) >= 50) {
-            console.log(parseFloat(this.userInfo.userBalance),parseFloat(this.price))
-            if(parseFloat(this.userInfo.userBalance)>=parseFloat(this.price)){
+            console.log(
+              parseFloat(this.userInfo.userBalance),
+              parseFloat(this.price)
+            );
+            if (
+              parseFloat(this.userInfo.userBalance) >= parseFloat(this.price)
+            ) {
               this.showShopCar = true;
-            }else{
+            } else {
               this.$toast({
                 duration: 1000,
                 forbidClick: true, // 禁用背景点击
                 message: "提现金额不能大于可用余额"
               });
             }
-            
           } else {
             this.$toast({
               duration: 1000,
@@ -262,7 +263,7 @@ export default {
         token: this.$store.state.token,
         payPassword: this.password, //支付密码
         amount: parseFloat(this.price), //提现额度
-        type: this.$route.query.type=='prize'?'prize':'balance'
+        type: this.$route.query.type == "prize" ? "prize" : "balance"
       };
       this.$http.post("userWithdrawDetail/save", params).then(res => {
         if (res.retCode == 0) {
@@ -272,13 +273,12 @@ export default {
             message: "操作成功！"
           });
           this.showShopCar = false;
-          this.showKeyboard=false;
-           this.uploadUserInfo();
-          this.$router.go(-1);//返回上一层
-        }else{
-          this.password='';
+          this.showKeyboard = false;
+          this.uploadUserInfo();
+          this.$router.go(-1); //返回上一层
+        } else {
+          this.password = "";
         }
-
       });
     },
     //点击支付完成按钮

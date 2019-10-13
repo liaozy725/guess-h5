@@ -168,6 +168,15 @@ export default {
           });
           this.uploadUserInfo();
           this.$emit("uploadCarData")
+        }else if(res.errorMsg.includes('余额不足')){
+          this.$dialog.confirm({
+            title: "标题",
+            message: '余额不足',
+            cancelButtonText: "取消",
+            confirmButtonText: "前往充值",
+          }).then(()=>{
+            this.$router.push('/layout/pay')
+          }).catch(()=>{})
         }
       })
     }
