@@ -66,7 +66,11 @@ export default {
       isRegister: false // 是否注册
     };
   },
-  created() { },
+  created() { 
+    this.$store.commit('setUserInfo',null);
+    this.$store.commit('setToken','');
+    localStorage.clear();
+  },
   methods: {
     uploadUserInfo: uploadUserInfo,//获取用户详情
     // 限制输入英文 数字
