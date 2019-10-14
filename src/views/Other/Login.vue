@@ -1,47 +1,49 @@
 <template>
   <div class="container login">
-    <div class="logo">
-      <img src="../../assets/login-logo.png" alt="">
-    </div>
-    <!-- 注册 -->
-    <div class="register login-main" v-if="isRegister">
-      <p class="title">注册</p>
-      <div class="input-box">
-        <img src="../../assets/login-user.png" class="label" alt="">
-        <input type="text" v-model="signIn.loginAccount" placeholder="用户名（4-12位小写字母或数字）" maxlength="12" minlength="4" :change="onInputChange('loginAccount')" />
+    <div class="container-box">
+      <div class="logo">
+        <img src="../../assets/login-logo.png" alt="">
       </div>
-      <div class="input-box">
-        <img src="../../assets/login-pwd.png" class="label" alt="">
-        <input type="password" v-model="signIn.loginPassword" placeholder="密码（6-12位小写字母或数字）" maxlength="12" minlength="6" />
+      <!-- 注册 -->
+      <div class="register login-main" v-if="isRegister">
+        <p class="title">注册</p>
+        <div class="input-box">
+          <img src="../../assets/login-user.png" class="label" alt="">
+          <input type="text" v-model="signIn.loginAccount" placeholder="用户名（4-12位小写字母或数字）" maxlength="12" minlength="4" :change="onInputChange('loginAccount')" />
+        </div>
+        <div class="input-box">
+          <img src="../../assets/login-pwd.png" class="label" alt="">
+          <input type="password" v-model="signIn.loginPassword" placeholder="密码（6-12位小写字母或数字）" maxlength="12" minlength="6" />
+        </div>
+        <div class="input-box">
+          <img src="../../assets/login-pwd.png" class="label" alt="">
+          <input type="password" v-model="signIn.confirmPassword" placeholder="请再次输入密码" maxlength="12" minlength="6" />
+        </div>
+        <div class="input-box">
+          <img src="../../assets/login-invite.png" class="label" alt="">
+          <input type="text" v-model="signIn.invitationCode" placeholder="推荐码（非必填）" />
+        </div>
+        <div class="btn" @click="registerFun">注册</div>
+        <p class="back" @click="isRegister=false;">返回登录</p>
       </div>
-      <div class="input-box">
-        <img src="../../assets/login-pwd.png" class="label" alt="">
-        <input type="password" v-model="signIn.confirmPassword" placeholder="请再次输入密码" maxlength="12" minlength="6" />
+      <!-- 登录 -->
+      <div class="sign-in login-main" v-else>
+        <p class="title">登录</p>
+        <div class="input-box">
+          <img src="../../assets/login-user.png" class="label" alt="">
+          <input type="text" v-model="loginForm.loginAccount" placeholder="请输入用户名" maxlength="12" minlength="4" />
+        </div>
+        <div class="input-box">
+          <img src="../../assets/login-pwd.png" class="label" alt="">
+          <input type="password" v-model="loginForm.loginPassword" placeholder="请输入密码" maxlength="12" minlength="6" />
+        </div>
+        <div class="other">
+          <span @click="isRegister=true;">账号注册</span>
+          <span>忘记密码</span>
+        </div>
+        <div class="btn" @click="login">登录</div>
+        <router-link to="/layout/home" class="back">我先逛逛</router-link>
       </div>
-      <div class="input-box">
-        <img src="../../assets/login-invite.png" class="label" alt="">
-        <input type="text" v-model="signIn.invitationCode" placeholder="推荐码（非必填）" />
-      </div>
-      <div class="btn" @click="registerFun">注册</div>
-      <p class="back" @click="isRegister=false;">返回登录</p>
-    </div>
-    <!-- 登录 -->
-    <div class="sign-in login-main" v-else>
-      <p class="title">登录</p>
-      <div class="input-box">
-        <img src="../../assets/login-user.png" class="label" alt="">
-        <input type="text" v-model="loginForm.loginAccount" placeholder="请输入用户名" maxlength="12" minlength="4" />
-      </div>
-      <div class="input-box">
-        <img src="../../assets/login-pwd.png" class="label" alt="">
-        <input type="password" v-model="loginForm.loginPassword" placeholder="请输入密码" maxlength="12" minlength="6" />
-      </div>
-      <div class="other">
-        <span @click="isRegister=true;">账号注册</span>
-        <span>忘记密码</span>
-      </div>
-      <div class="btn" @click="login">登录</div>
-      <router-link to="/layout/home" class="back">我先逛逛</router-link>
     </div>
   </div>
 </template>
@@ -66,9 +68,9 @@ export default {
       isRegister: false // 是否注册
     };
   },
-  created() { 
-    this.$store.commit('setUserInfo',null);
-    this.$store.commit('setToken','');
+  created() {
+    this.$store.commit('setUserInfo', null);
+    this.$store.commit('setToken', '');
     localStorage.clear();
   },
   methods: {
@@ -80,7 +82,6 @@ export default {
     // 注册
     registerFun() {
       if (!this.signIn.loginAccount || this.signIn.loginAccount.length < 4) {
-
         this.$toast({
           duration: 1000,
           icon: iconWarning,
@@ -172,6 +173,12 @@ export default {
   background-size: contain;
   position: relative;
   padding-top: 160px;
+  .container-box{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+  }
   .logo {
     text-align: center;
     margin-bottom: 100px;
