@@ -9,7 +9,7 @@ export default new Vuex.Store({
     userInfo: null,
     token: '',
     showDatePicker:false,
-    time: 24
+    time: ''
   },
   mutations: {
     // 设置页面标题

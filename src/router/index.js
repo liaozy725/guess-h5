@@ -66,6 +66,7 @@ var router = new Router({
 
 router.beforeEach((to,from,next)=>{
   store.commit('setShowDatePicker',false);
+  store.commit('changeTime','');
   next()
 })
 
