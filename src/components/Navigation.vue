@@ -33,9 +33,9 @@
 
     <van-popup class="user-menu" v-model="showUserMenu" position="right" :style="{ width: '50%',height: '100%'}">
       <div class="header">
-        <img src="../assets/user.png" alt />
+        <img src="../assets/user.png" alt @click="gotoLogin"/>
         <p class="name" v-if="$store.state.userInfo">{{$store.state.userInfo.accountLogin||''}}</p>
-        <p class="name" v-else>暂未登录</p>
+        <p class="name" v-else @click="gotoLogin">暂未登录</p>
         <div class="header-main">
           <div class="item">
             <label>余额</label>
@@ -96,6 +96,13 @@ export default {
       this.$store.commit('setToken','')
       this.$store.commit('setUserInfo',null)
       this.$router.replace("/login");
+    },
+    // 调整登录页
+    gotoLogin(){
+      if(this.$store.state.userInfo){
+        return
+      }
+      this.$router.replace('/login')
     },
     // 时间选择回调
     selectDate(dateList){
