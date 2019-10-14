@@ -22,6 +22,8 @@
 <script>
 import { regPhone } from "@/utils/utils.js";
 import {uploadUserInfo} from '@/utils/utils.js';
+let iconSuccess = require('@/assets/icon-success.png');
+let iconWarning = require('@/assets/icon-warning.png');
 export default {
   name: "ChangeMobile",
   data() {
@@ -51,6 +53,7 @@ export default {
         return this.$toast({
           duration: 1000,
           forbidClick: true, // 禁用背景点击
+          icon: iconWarning,
           message: "请输入正确的手机号码"
         });
       }
@@ -62,6 +65,7 @@ export default {
         if (res.retCode == 0) {
           this.$toast.success({
             duration: 1000,
+            icon: iconSuccess,
             forbidClick: true, // 禁用背景点击
             message: "操作成功！"
           });

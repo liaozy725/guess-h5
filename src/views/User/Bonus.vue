@@ -47,6 +47,7 @@
 </template>
 
 <script>
+let iconSuccess = require('@/assets/icon-success.png');
 export default {
   data() {
     return {
@@ -94,7 +95,7 @@ export default {
     },
     // 复制成功
     onCopySuccess() {
-      this.$toast({ duration: 2000, forbidClick: true, message: "复制成功" });
+      this.$toast({ duration: 2000, forbidClick: true,icon: iconSuccess,  message: "复制成功" });
     },
     // 复制失败
     onCopyError() {

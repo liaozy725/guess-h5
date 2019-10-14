@@ -30,6 +30,8 @@
 
 <script>
 import {uploadUserInfo} from '@/utils/utils.js';
+let iconSuccess = require('@/assets/icon-success.png');
+let iconWarning = require('@/assets/icon-warning.png');
 export default {
   name: "BankcardInfo",
   data() {
@@ -55,6 +57,7 @@ export default {
       if(!this.formData.password|| this.formData.password.length !=6){
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的支付密码"
         });
@@ -62,6 +65,7 @@ export default {
       if(!this.formData.confirmPassword|| this.formData.confirmPassword.length !=6){
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的确认支付密码"
         });
@@ -69,6 +73,7 @@ export default {
       if(this.formData.password!=this.formData.confirmPassword){
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "两次密码不一致"
         });
@@ -81,6 +86,7 @@ export default {
         if (res.retCode == 0) {
           this.$toast.success({
             duration: 1000,
+            icon: iconSuccess,
             forbidClick: true, // 禁用背景点击
             message: "操作成功！"
           });
@@ -95,12 +101,10 @@ export default {
       if(this.formData[this.activeInput].length>=6){
         this.showKeyboard =false;
       }
-       console.log(this.formData[this.activeInput])
     },
     //点击删除支付密码
     onDelete() {
       this.formData[this.activeInput]= this.formData[this.activeInput].slice(0, this.formData[this.activeInput].length - 1);
-      console.log(this.formData[this.activeInput])
     }
   }
 };

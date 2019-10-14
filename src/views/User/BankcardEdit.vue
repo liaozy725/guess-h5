@@ -75,6 +75,8 @@
 
 <script>
 import { regNum } from "@/utils/utils.js";
+let iconSuccess = require('@/assets/icon-success.png');
+let iconWarning = require('@/assets/icon-warning.png');
 export default {
   name: "BankcardInfo",
   data() {
@@ -178,6 +180,7 @@ export default {
       if (!this.bankUserName) {
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的开户名称"
         });
@@ -185,6 +188,7 @@ export default {
       if (!regNum(this.bankNo)) {
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的银行卡号"
         });
@@ -192,6 +196,7 @@ export default {
       if (!this.province) {
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的省份"
         });
@@ -199,6 +204,7 @@ export default {
       if (!this.city) {
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的城市"
         });
@@ -206,6 +212,7 @@ export default {
       if (!this.bankName) {
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的开户银行"
         });
@@ -213,6 +220,7 @@ export default {
       if (!this.bankBranch) {
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的开户支行"
         });
@@ -230,6 +238,7 @@ export default {
         if (res.retCode == 0) {
           this.$toast.success({
             duration: 1000,
+            icon: iconSuccess,
             forbidClick: true, // 禁用背景点击
             message: "操作成功！"
           });

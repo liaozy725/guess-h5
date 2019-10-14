@@ -82,6 +82,8 @@
 
 <script>
 import { uploadUserInfo } from "@/utils/utils.js";
+let iconSuccess = require('@/assets/icon-success.png');
+let iconWarning = require('@/assets/icon-warning.png');
 export default {
   name: "withdraw",
   data() {
@@ -199,7 +201,7 @@ export default {
       }
     },
     //筛选银行卡
-    onChange(picker, value, index) {},
+    onChange(picker, value, index) { },
     //关闭选择银行卡弹框
     onCancel() {
       this.bankcardModel = false;
@@ -238,6 +240,7 @@ export default {
               this.$toast({
                 duration: 1000,
                 forbidClick: true, // 禁用背景点击
+                icon: iconWarning,
                 message: "提现金额不能大于可用余额"
               });
             }
@@ -245,6 +248,7 @@ export default {
             this.$toast({
               duration: 1000,
               forbidClick: true, // 禁用背景点击
+              icon: iconWarning,
               message: "输入金额不能小于50"
             });
           }
@@ -252,6 +256,7 @@ export default {
           this.$toast({
             duration: 1000,
             forbidClick: true, // 禁用背景点击
+            icon: iconWarning,
             message: "输入金额不能大于100000"
           });
         }
@@ -270,6 +275,7 @@ export default {
           this.$toast.success({
             duration: 1000,
             forbidClick: true, // 禁用背景点击
+            icon: iconSuccess,
             message: "操作成功！"
           });
           this.showShopCar = false;

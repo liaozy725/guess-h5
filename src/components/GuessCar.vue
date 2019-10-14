@@ -50,6 +50,7 @@
 <script>
 import { uploadUserInfo } from '@/utils/utils.js'
 let iconSuccess = require('@/assets/icon-success.png');
+let btnCanClick = true;
 export default {
   props: {
     showPopup: {
@@ -137,6 +138,8 @@ export default {
           this.showUserMenu = false;
         })
       }
+      if( !btnCanClick ) { return }
+      btnCanClick = false;
       let guessIds=[],guessInfoIds=[],gameTeamIds=[],numbers=[],bettings=[];
       this.carData.forEach(el => {
         if(el.number>0){
@@ -159,6 +162,7 @@ export default {
         return this.$toast({duration: 2000,forbidClick: true,message: "请选择下注数量"});
       }
       this.$http.post('home/userBetting',params).then(res=>{
+        btnCanClick = true;
         if(res.retCode ==0){
           this.$toast({
             duration: 2000,

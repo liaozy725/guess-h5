@@ -59,7 +59,7 @@
     <!-- 数字键盘 -->
     <van-number-keyboard v-model="price" extra-key="." :show="show" safe-area-inset-bottom :maxlength="10" @blur="show = false" />
     <!-- 二维码弹框 -->
-    <van-overlay :show="showCode"  />
+    <van-overlay :show="showCode" />
     <div class="codePop-box" v-if="showCode">
       <div class="close-box" @click="clearCodeModel"></div>
       <!-- <div class="qrcode" ref="qrcodeContainer"></div> -->
@@ -100,8 +100,10 @@
 
 <script>
 import QRCode from 'qrcodejs2';//二维码生成插件
-import {uploadUserInfo} from '@/utils/utils.js';
+import { uploadUserInfo } from '@/utils/utils.js';
 let iconSuccess = require('@/assets/icon-success.png');
+let iconWarning = require('@/assets/icon-warning.png');
+let btnCanClick = true;
 export default {
   name: "pay",
   data() {
@@ -119,20 +121,20 @@ export default {
       ], //金额筛选的项
       show: false, //控制弹出数字键盘
       isFinish: false, //判断是否完成
-      showCode:false,//控制二维码弹框
-      codeUrl:'https://wallimn.iteye.com',//二维码地址
-      orderNo:null,//订单号
+      showCode: false,//控制二维码弹框
+      codeUrl: 'https://wallimn.iteye.com',//二维码地址
+      orderNo: null,//订单号
     };
   },
   created() {
     this.$store.commit("setPageTitle", "充值");
   },
   mounted() {
-   // this.showQRCode();
-   this.uploadUserInfo();
+    // this.showQRCode();
+    this.uploadUserInfo();
   },
   methods: {
-    uploadUserInfo:uploadUserInfo,//获取用户详情
+    uploadUserInfo: uploadUserInfo,//获取用户详情
     //生成二维码
     // vue对象的一个method
     showQRCode() {
@@ -165,13 +167,13 @@ export default {
     sureBtn() {
       if (!!this.price) {
         if (parseFloat(this.price) <= 10000) {
-          
-          if(parseFloat(this.price) >= 100){
+          if (parseFloat(this.price) >= 100) {
             this.showShopCar = true;
             this.isFinish = false;
-          }else{
+          } else {
             this.$toast({
               duration: 1000,
+              icon: iconWarning,
               forbidClick: true, // 禁用背景点击
               message: "输入金额不能小于100"
             });
@@ -179,14 +181,16 @@ export default {
         } else {
           this.$toast({
             duration: 1000,
+            icon: iconWarning,
             forbidClick: true, // 禁用背景点击
             message: "输入金额不能大于10000"
           });
-          
+
         }
-      }else{
+      } else {
         this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入充值金额"
         });
@@ -194,38 +198,44 @@ export default {
     },
     //点击确认充值
     submit() {
-      let params={
-        token:this.$store.state.token,
-        transferType:this.activeTab,//充值方式
-        amount:parseFloat(this.price),//充值金额
+      if (!btnCanClick) { return }
+      let params = {
+        token: this.$store.state.token,
+        transferType: this.activeTab,//充值方式
+        amount: parseFloat(this.price),//充值金额
       }
-      this.$http.post("orderInfo/recharge",params ).then(res => {
+      btnCanClick = false;
+      this.$http.post("orderInfo/recharge", params).then(res => {
+        btnCanClick = true;
         if (res.retCode == "0") {
-         this.codeUrl=res.data.codeUrl;
-         this.orderNo=res.data.orderNo;
-         this.showShopCar = false;
-         this.isFinish = false;
-         this.showCode = true;
-        } 
+          this.codeUrl = res.data.codeUrl;
+          this.orderNo = res.data.orderNo;
+          this.showShopCar = false;
+          this.isFinish = false;
+          this.showCode = true;
+        }
       });
     },
     //点击支付完成按钮
     successBtn() {
+      if (!btnCanClick) { return }
       let params = {
-        token:this.$store.state.token,
-        orderNo:this.orderNo
+        token: this.$store.state.token,
+        orderNo: this.orderNo
       }
-      this.$http.post('orderInfo/paid',params).then(res=>{
-        if(res.retCode == 0){
-          this.$toast.success({duration: 1000,icon: iconSuccess,forbidClick: true, message: "支付成功！"});
+      btnCanClick = false;
+      this.$http.post('orderInfo/paid', params).then(res => {
+        btnCanClick = true;
+        if (res.retCode == 0) {
+          this.$toast.success({ duration: 1000, icon: iconSuccess, forbidClick: true, message: "支付成功！" });
           this.$router.replace({ path: "/layout/home" });
         }
       })
     },
     //关闭二维码弹框
-    clearCodeModel(){
-      this.showCode=false;
-      this.isFinish=true;
+    clearCodeModel() {
+      this.showCode = false;
+      this.isFinish = true;
       this.showShopCar = true;
     }
   }
@@ -406,86 +416,86 @@ export default {
     border-radius: 5px;
     z-index: 20;
     .top-box {
-    color: $gray;
-    padding: 22px 42px;
-    background-color: #35333b;
-    font-size: 26px;
-    margin: 25px 0;
-    margin-top: 0;
-  }
-  .top-text-box {
-    background-color: #ffc444;
-    position: relative;
-    text-align: center;
-    padding: 20px 0;
-    span {
-      color: #000;
-      font-size: 31px;
-    }
-    i {
-      display: block;
-      position: absolute;
-      left: 50%;
-      bottom: -50px;
-      transform: translate(-50%);
-      border: 25px solid transparent;
-      border-top: 25px solid #ffc444;
-    }
-  }
-  .content-box {
-    background-color: #35333b;
-    margin-top: 25px;
-    .price {
-      color: #ff4200;
-      font-size: 59px;
-      text-align: center;
-      padding: 40px 0;
-    }
-    .code-box {
-      text-align: center;
-      padding-bottom: 50px;
-      img {
-        width: 347px;
-        height: 347px;
-      }
+      color: $gray;
+      padding: 22px 42px;
+      background-color: #35333b;
+      font-size: 26px;
+      margin: 25px 0;
+      margin-top: 0;
     }
     .top-text-box {
+      background-color: #ffc444;
+      position: relative;
+      text-align: center;
+      padding: 20px 0;
       span {
+        color: #000;
         font-size: 31px;
       }
+      i {
+        display: block;
+        position: absolute;
+        left: 50%;
+        bottom: -50px;
+        transform: translate(-50%);
+        border: 25px solid transparent;
+        border-top: 25px solid #ffc444;
+      }
     }
-    .term-box {
-      padding-top: 31px;
-      .list-box {
-        padding-bottom: 28px;
-        padding-left: 110px;
-        p {
-          width: 44px;
-          height: 44px;
-          background-color: #ffc444;
-          border-radius: 6px;
-          font-size: 33px;
-          color: #000;
-          line-height: 44px;
-          text-align: center;
-          display: inline-block;
-          margin-bottom: 0;
+    .content-box {
+      background-color: #35333b;
+      margin-top: 25px;
+      .price {
+        color: #ff4200;
+        font-size: 59px;
+        text-align: center;
+        padding: 40px 0;
+      }
+      .code-box {
+        text-align: center;
+        padding-bottom: 50px;
+        img {
+          width: 347px;
+          height: 347px;
         }
+      }
+      .top-text-box {
         span {
-          padding-left: 28px;
-          color: $gray;
-          font-size: 33px;
+          font-size: 31px;
+        }
+      }
+      .term-box {
+        padding-top: 31px;
+        .list-box {
+          padding-bottom: 28px;
+          padding-left: 110px;
+          p {
+            width: 44px;
+            height: 44px;
+            background-color: #ffc444;
+            border-radius: 6px;
+            font-size: 33px;
+            color: #000;
+            line-height: 44px;
+            text-align: center;
+            display: inline-block;
+            margin-bottom: 0;
+          }
+          span {
+            padding-left: 28px;
+            color: $gray;
+            font-size: 33px;
+          }
         }
       }
     }
-  }
-  .close-box{
+    .close-box {
       position: absolute;
       right: -20px;
       top: -20px;
-      width:60px;
+      width: 60px;
       height: 60px;
-      background: url('../../assets/icon-close2.png') no-repeat;
+      background: url("../../assets/icon-close2.png") no-repeat;
       background-size: 100%;
     }
     // .code-img{

@@ -24,6 +24,8 @@
 </template>
 
 <script>
+let iconSuccess = require('@/assets/icon-success.png');
+let iconWarning = require('@/assets/icon-warning.png');
 export default {
   name: "BankcardInfo",
   data() {
@@ -50,6 +52,7 @@ export default {
       if(!this.formData.oldPassword|| this.formData.oldPassword.length<6){
         return this.$toast({
           duration: 1000,
+          icon: iconWarning,
           forbidClick: true, // 禁用背景点击
           message: "请输入正确的旧密码"
         });
@@ -58,6 +61,7 @@ export default {
         return this.$toast({
           duration: 1000,
           forbidClick: true, // 禁用背景点击
+          icon: iconWarning,
           message: "请输入正确的新密码"
         });
       }
@@ -65,6 +69,7 @@ export default {
         return this.$toast({
           duration: 1000,
           forbidClick: true, // 禁用背景点击
+          icon: iconWarning,
           message: "两次密码不一致"
         });
       }
@@ -79,6 +84,7 @@ export default {
           this.$toast.success({
             duration: 1000,
             forbidClick: true, // 禁用背景点击
+            icon: iconSuccess,
             message: "操作成功！"
           });
           this.$router.go(-1);//返回上一层
