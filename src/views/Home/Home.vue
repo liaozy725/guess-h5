@@ -33,8 +33,8 @@
         <div class="li" v-for="(item,i) in guessList" @click="guessInfo(item)" :key="i">
           <div class="list-tit">
             <img :src="item.gamePic" alt class="tit-logo" />
-            <span>{{item.gameName}}-{{item.matchName}}</span>
-            <i class="icon-number">+{{item.number}}</i>
+            <span>{{item.matchName}} - {{item.name}}</span>
+            <!-- <i class="icon-number">+{{item.number}}</i> -->
           </div>
           <div class="list-main">
             <div class="time">

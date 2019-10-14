@@ -34,6 +34,7 @@
     </header>
 
     <van-tabs class="tabs" v-model="activeTab" :border="false" @change="tabChange">
+      <van-tab name="all" title="总竞猜"></van-tab>
       <van-tab v-for="index in guessData.number" :name="index" :title="'第' + index + '局'" :key="index"></van-tab>
     </van-tabs>
 
@@ -95,7 +96,7 @@ export default {
       let params = {
         token: this.$store.state.token,
         guessId: this.guessId,
-        number: this.activeTab
+        number: this.activeTab == 'all' ? '' : this.activeTab
       }
       this.$http.post('home/guessContentInfo',params).then(res=>{
         if(res.retCode==0){
