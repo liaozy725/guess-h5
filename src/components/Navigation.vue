@@ -251,7 +251,7 @@ export default {
       .name {
         font-size: 26px;
         color: #d7d4de;
-        margin: 22px 0 40px;
+        margin: 22px 0 0;
         text-align: center;
         min-height: 30px;
       }

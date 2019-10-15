@@ -9,19 +9,19 @@
         <p class="title">注册</p>
         <div class="input-box">
           <img src="../../assets/login-user.png" class="label" alt="">
-          <input type="text" v-model="signIn.loginAccount" placeholder="用户名（4-12位小写字母或数字）" maxlength="12" minlength="4" :change="onInputChange('loginAccount')" />
+          <input type="text" v-model="signIn.loginAccount" placeholder="用户名（4-12位小写字母或数字）" @blur="windowScrollBack" maxlength="12" minlength="4" :change="onInputChange('loginAccount')" />
         </div>
         <div class="input-box">
           <img src="../../assets/login-pwd.png" class="label" alt="">
-          <input type="password" v-model="signIn.loginPassword" placeholder="密码（6-12位小写字母或数字）" maxlength="12" minlength="6" />
+          <input type="password" v-model="signIn.loginPassword" placeholder="密码（6-12位小写字母或数字）" @blur="windowScrollBack" maxlength="12" minlength="6" />
         </div>
         <div class="input-box">
           <img src="../../assets/login-pwd.png" class="label" alt="">
-          <input type="password" v-model="signIn.confirmPassword" placeholder="请再次输入密码" maxlength="12" minlength="6" />
+          <input type="password" v-model="signIn.confirmPassword" placeholder="请再次输入密码" @blur="windowScrollBack" maxlength="12" minlength="6" />
         </div>
         <div class="input-box">
           <img src="../../assets/login-invite.png" class="label" alt="">
-          <input type="text" v-model="signIn.invitationCode" placeholder="推荐码（非必填）" />
+          <input type="text" v-model="signIn.invitationCode" @blur="windowScrollBack" placeholder="推荐码（非必填）" />
         </div>
         <div class="btn" @click="registerFun">注册</div>
         <p class="back" @click="isRegister=false;">返回登录</p>
@@ -31,11 +31,11 @@
         <p class="title">登录</p>
         <div class="input-box">
           <img src="../../assets/login-user.png" class="label" alt="">
-          <input type="text" v-model="loginForm.loginAccount" placeholder="请输入用户名" maxlength="12" minlength="4" />
+          <input type="text" v-model="loginForm.loginAccount" @blur="windowScrollBack" placeholder="请输入用户名" maxlength="12" minlength="4" />
         </div>
         <div class="input-box">
           <img src="../../assets/login-pwd.png" class="label" alt="">
-          <input type="password" v-model="loginForm.loginPassword" placeholder="请输入密码" maxlength="12" minlength="6" />
+          <input type="password" v-model="loginForm.loginPassword" @blur="windowScrollBack" placeholder="请输入密码" maxlength="12" minlength="6" />
         </div>
         <div class="other">
           <span @click="isRegister=true;">账号注册</span>
@@ -161,6 +161,10 @@ export default {
           this.$store.commit("setUserInfo", res.data);
         }
       });
+    },
+    // 键盘收起，页面回弹
+    windowScrollBack(){
+      window.scrollTo(0,0)
     }
   }
 };

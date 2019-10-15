@@ -3,13 +3,13 @@
     <div class="list-box">
       <div class="label-text">开户名称</div>
       <div class="label-content">
-        <input type="text" v-model="bankUserName" placeholder="请输入姓名" />
+        <input type="text" v-model="bankUserName" @blur="windowScrollBack" placeholder="请输入姓名" />
       </div>
     </div>
     <div class="list-box">
       <div class="label-text">银行卡号</div>
       <div class="label-content">
-        <input type="text" v-model="bankNo" placeholder="请输入银行卡号" />
+        <input type="text" v-model="bankNo" @blur="windowScrollBack" placeholder="请输入银行卡号" />
       </div>
     </div>
     <div class="list-box" @click="changeProvince">
@@ -38,7 +38,7 @@
       <div class="label-content change-content">
         <!-- <div class="gray-text">请选择银行</div> -->
         <!-- <div class="gray-text check-text">工商银行</div> -->
-        <input type="text" v-model="bankName" placeholder="请输入开户银行" />
+        <input type="text" v-model="bankName" @blur="windowScrollBack" placeholder="请输入开户银行" />
         <div class="img-box">
           <img src="../../assets/icon-down.png" alt />
         </div>
@@ -47,7 +47,7 @@
     <div class="list-box">
       <div class="label-text">开户支行</div>
       <div class="label-content">
-        <input type="text" v-model="bankBranch" placeholder="请输入支行名称" />
+        <input type="text" v-model="bankBranch" @blur="windowScrollBack" placeholder="请输入支行名称" />
       </div>
     </div>
     <div class="sure-big-btn" v-if="!!$route.query.id" @click="edit">确认编辑</div>
@@ -113,6 +113,10 @@ export default {
   },
   mounted() {},
   methods: {
+    // 键盘收起，页面回弹
+    windowScrollBack(){
+      window.scrollTo(0,0)
+    },
     // 限制输入英文 数字
     onInputChange(key) {
       this.key = this.key.replace(/[^0-9]+/g, "");
