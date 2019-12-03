@@ -95,7 +95,7 @@ export default {
       show: false, //控制弹出数字键盘
       allPrice: "200", //可提现的余额
       bankcardModel: false, //控制银行卡选择的弹框
-      columns: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
+      columns: [],
       password: "", //支付密码
       showKeyboard: false, //控制支付密码键盘
       bankInfo: null, //银行卡信息
