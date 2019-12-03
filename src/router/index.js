@@ -53,6 +53,10 @@ var router = new Router({
         {path:'/layout/ChangePayPwd',name:'ChangePayPwd',component: () => import('@/views/User/ChangePayPwd.vue'),meta: { keepAlive: true ,title:'修改支付密码',}},
         //用户中心-修改支付密码
         {path:'/layout/Bonus',name:'Bonus',component: () => import('@/views/User/Bonus.vue'),meta: { keepAlive: true ,title:'奖金',}},
+        //用户中心-我的直接下属
+        {path:'/layout/MySub',name:'MySub',component: () => import('@/views/User/MySub.vue'),meta: { keepAlive: true ,title:'设置',}},
+        //用户中心-我的直接下属 - 下属详情
+        {path:'/layout/SubDetail',name:'SubDetail',component: () => import('@/views/User/SubDetail.vue'),meta: { keepAlive: true ,title:'下属详情',}},
       ]
     },
     /*******登录********/

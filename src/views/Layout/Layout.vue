@@ -1,6 +1,8 @@
 <template>
   <div class="layout">
-    <Navigation></Navigation>
+    <Navigation>
+      <router-link v-if="$route.name=='Bonus'" slot='nav-r-slot' class="set-link" to="/layout/MySub">设置</router-link>
+    </Navigation>
     <keep-alive>
       <transition name="fade-transform" mode="out-in">
         <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -26,5 +28,10 @@ export default {
   padding-top: 107px;
   -webkit-overflow-scrolling: touch;
   overflow-y: auto;
+  .set-link{
+    font-size: 28px;
+    width: 100%;
+    text-align: right;
+  }
 }
 </style>

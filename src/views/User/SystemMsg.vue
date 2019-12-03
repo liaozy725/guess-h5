@@ -21,7 +21,6 @@ export default {
       pageNum:0,
       pageSize:20,
       listData: [],
-
     };
   },
   created(){

@@ -16,6 +16,7 @@
         <span>{{$store.state.pageTitle}}</span>
       </div>
       <div class="nav-r">
+        <slot name='nav-r-slot'></slot>
         <div class="nav-r-box" v-if="$store.state.showDatePicker">
           <div class="nav-r-btn" @click="showTimeMenb = !showTimeMenb">
             <span>{{$store.state.time == '' ?'全部时间': $store.state.time + '小时'}}</span>
@@ -37,12 +38,12 @@
         <p class="name" v-if="$store.state.userInfo">{{$store.state.userInfo.accountLogin||''}}</p>
         <p class="name" v-else @click="gotoLogin">暂未登录</p>
         <div class="header-main">
-          <div class="item">
+          <div @click="goToRouterLink('/layout/pay')" class="item">
             <label>余额</label>
             <p v-if="$store.state.userInfo">{{$store.state.userInfo.userBalance||0}}</p>
             <p v-else>0</p>
           </div>
-          <div class="item">
+          <div @click="goToRouterLink('/layout/withdraw')" class="item">
             <label>可提</label>
             <p v-if="$store.state.userInfo">{{$store.state.userInfo.userBalance}}</p>
             <p v-else>0</p>

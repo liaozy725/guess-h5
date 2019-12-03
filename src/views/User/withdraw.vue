@@ -129,26 +129,21 @@ export default {
             this.bankInfo = res.data;
             this.getPayPassword(); //判断是否存在支付密码
           } else {
-            this.$dialog
-              .confirm({
-                title: "标题",
-                message: "您暂未绑定银行卡",
-                cancelButtonText: "暂不提现",
-                confirmButtonText: "立即绑定",
-                showConfirmButton: true,
-                showCancelButton: true
-                // confirmButtonColor: "#35333b"
-              })
-              .then(() => {
-                // on confirm
-                console.log("立即绑定");
-                this.$router.push({ path: "/layout/BankcardEdit" });
-              })
-              .catch(() => {
-                // on cancel
-                console.log("暂不提现");
-                this.$router.go(-1); //返回上一层
-              });
+            this.$dialog.confirm({
+              title: "标题",
+              message: "您暂未绑定银行卡",
+              cancelButtonText: "暂不提现",
+              confirmButtonText: "立即绑定",
+              showConfirmButton: true,
+              showCancelButton: true
+              // confirmButtonColor: "#35333b"
+            }).then(() => {
+              // on confirm
+              this.$router.push({ path: "/layout/BankcardEdit" });
+            }).catch(() => {
+              // on cancel
+              this.$router.go(-1); //返回上一层
+            });
           }
         }
       });
@@ -157,26 +152,21 @@ export default {
     getPayPassword() {
       if (this.$store.state.userInfo.payPassword == "n") {
         //无支付密码
-        this.$dialog
-          .confirm({
-            title: "提示",
-            message: "您暂未设置支付密码",
-            cancelButtonText: "暂不提现",
-            confirmButtonText: "立即设置",
-            showConfirmButton: true,
-            showCancelButton: true,
-            confirmButtonColor: "#35333b"
-          })
-          .then(() => {
-            // on confirm
-            console.log("立即设置");
-            this.$router.push({ path: "/layout/ChangePayPwd" });
-          })
-          .catch(() => {
-            // on cancel
-            console.log("暂不提现");
-            this.$router.go(-1); //返回上一层
-          });
+        this.$dialog.confirm({
+          title: "提示",
+          message: "您暂未设置支付密码",
+          cancelButtonText: "暂不提现",
+          confirmButtonText: "立即设置",
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonColor: "#35333b"
+        }).then(() => {
+          // on confirm
+          this.$router.push({ path: "/layout/ChangePayPwd" });
+        }).catch(() => {
+          // on cancel
+          this.$router.go(-1); //返回上一层
+        });
       }
     },
     //清空金额
