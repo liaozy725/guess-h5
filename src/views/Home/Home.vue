@@ -1,11 +1,10 @@
 <template>
   <div class="container home" @scroll="onPageScroll" :style="isFixed?'padding-top:'+fixedHeight +'px':''">
-    <!-- <div class="swiper">
+    <div class="swiper">
       <van-swipe :autoplay="3000" :show-indicators="false">
         <van-swipe-item></van-swipe-item>
-        <van-swipe-item></van-swipe-item>
       </van-swipe>
-    </div>-->
+    </div>
     <div class="navs-box" ref="navsBox" :class="isFixed&&'fixed'" :style="isFixed?'margin-top:'+baseHeight +'px':''">
       <van-tabs v-model="activeGame" line-height="0" :border="false" class="games" @change="gameChange">
         <van-tab name="all">
@@ -227,7 +226,7 @@ export default {
     &.fixed {
       position: fixed;
       top: 0;
-      z-index: 99;
+      z-index: 98;
       width: 100%;
     }
     .games {

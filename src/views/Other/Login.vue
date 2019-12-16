@@ -176,7 +176,7 @@ export default {
   background: #000 url(~@/assets/login-bg.png) no-repeat;
   background-size: contain;
   position: relative;
-  padding-top: 160px;
+  padding-top: 120px;
   .container-box{
     position: absolute;
     left: 50%;
@@ -185,9 +185,9 @@ export default {
   }
   .logo {
     text-align: center;
-    margin-bottom: 100px;
+    margin-bottom: 0px;
     img {
-      width: 365px;
+      width: 430px;
     }
   }
   .login-main {
