@@ -2,7 +2,11 @@
   <div class="container home" @scroll="onPageScroll" :style="isFixed?'padding-top:'+fixedHeight +'px':''">
     <div class="swiper">
       <van-swipe :autoplay="3000" :show-indicators="false">
-        <van-swipe-item></van-swipe-item>
+        <van-swipe-item v-for="item in bannerList">
+          <a :href="item.url">
+            <img :src="item.pic" class="banner-img" />
+          </a>
+        </van-swipe-item>
       </van-swipe>
     </div>
     <div class="navs-box" ref="navsBox" :class="isFixed&&'fixed'" :style="isFixed?'margin-top:'+baseHeight +'px':''">
@@ -20,7 +24,7 @@
       </van-tabs>
       <div class="guess-nav-type">
         <ul class="guess-ul">
-          <li :class="playType==''?'active':''" @click="changeType('')" >全部</li>
+          <li :class="playType==''?'active':''" @click="changeType('')">全部</li>
           <li :class="playType==2?'active':''" @click="changeType(2)">早盘</li>
           <li :class="playType==1?'active':''" @click="changeType(1)">滚盘</li>
         </ul>
@@ -47,10 +51,9 @@
                 <div class="team">
                   <img :src="guess.teamPic" alt />
                   <span>{{guess.gameTeamName}}</span>
-                  
                 </div>
                 <span class="num" @click.stop="addShopCar(item,guess)">{{guess.oddsAmount}}</span>
-                <img src="../../assets/icon-dis.png" class="disable-icon" v-if="guess.isSealed=='y'"/>
+                <img src="../../assets/icon-dis.png" class="disable-icon" v-if="guess.isSealed=='y'" />
               </div>
             </div>
           </div>
@@ -64,7 +67,7 @@
 
 <script>
 import GuessCar from "@/components/GuessCar.vue";
-import {uploadUserInfo} from '@/utils/utils.js';
+import { uploadUserInfo } from "@/utils/utils.js";
 export default {
   name: "home",
   data() {
@@ -75,22 +78,24 @@ export default {
       fixedHeight: 0,
       isFixed: false,
       showPopup: false,
+      bannerList: [], // banner
       gameList: [], // 游戏列表
       guessList: [], // 竞猜列表
       carData: [], // 购物车数据
-      carDataIds:[], // 购物车id集合
+      carDataIds: [], // 购物车id集合
       pageNum: 0,
       pageSize: 10,
-      loading:false,//加载中
-      finished:false,//没有更多数据
+      loading: false, //加载中
+      finished: false //没有更多数据
     };
   },
   components: { GuessCar },
   created() {
     this.$store.commit("setPageTitle", "首页");
     this.getGameList();
+    this.getBannerList();
     // this.getGuessList();
-    if(this.$store.state.token){
+    if (this.$store.state.token) {
       this.uploadUserInfo();
     }
   },
@@ -98,17 +103,22 @@ export default {
     this.baseHeight = document.getElementById("navigation").offsetHeight;
     this.fixedHeight = this.$refs.navsBox.offsetHeight;
   },
-  computed:{
+  computed: {
     // 判断是否在里面
-    isInGuessCar(){
-      return (item,guess)=>{
-        let idx =  this.carData.findIndex((el)=>(el.guessId == item.id &&el.guessInfoId == guess.guessInfoId && el.gameTeamId == guess.gameTeamId));
+    isInGuessCar() {
+      return (item, guess) => {
+        let idx = this.carData.findIndex(
+          el =>
+            el.guessId == item.id &&
+            el.guessInfoId == guess.guessInfoId &&
+            el.gameTeamId == guess.gameTeamId
+        );
         return idx >= 0;
-      }
+      };
     }
   },
   methods: {
-    uploadUserInfo:uploadUserInfo,
+    uploadUserInfo: uploadUserInfo,
     // 页面滚动
     onPageScroll(e) {
       this.isFixed = e.target.scrollTop > this.fixedHeight - 1;
@@ -116,20 +126,20 @@ export default {
     // 改变早盘、滚盘
     changeType(type) {
       this.playType = type;
-      this.pageNum=0;
-      this.guessList=[];
+      this.pageNum = 0;
+      this.guessList = [];
       this.finished = false;
 
       this.getGuessList();
     },
     // 添加购物车
-    addShopCar(item,guess) {
-      if(guess.isSealed=='y'){
+    addShopCar(item, guess) {
+      if (guess.isSealed == "y") {
         return;
       }
       let teams = [];
       item.homeListReps.forEach(el => {
-        teams.push(el.gameTeamName)
+        teams.push(el.gameTeamName);
       });
       let guessObj = {
         guessId: item.id,
@@ -138,24 +148,29 @@ export default {
         gameTeamId: guess.gameTeamId,
         gameTeamName: guess.gameTeamName,
         oddsAmount: guess.oddsAmount,
-        number:0,
+        number: 0,
         teams: teams
-      }
+      };
       this.showPopup = true;
-      let idx = this.carData.findIndex((el)=>(el.guessId == guessObj.guessId && el.guessInfoId == guessObj.guessInfoId && el.gameTeamId == guessObj.gameTeamId))
+      let idx = this.carData.findIndex(
+        el =>
+          el.guessId == guessObj.guessId &&
+          el.guessInfoId == guessObj.guessInfoId &&
+          el.gameTeamId == guessObj.gameTeamId
+      );
 
-      if(idx<0){
-        this.carData.push(guessObj)
-      }else{
-        this.carData.splice(idx,1);
+      if (idx < 0) {
+        this.carData.push(guessObj);
+      } else {
+        this.carData.splice(idx, 1);
       }
     },
     // 跳转到竞猜详情
     guessInfo(item) {
       this.$router.push({
         path: "/layout/GuessDetail",
-        query:{
-          id: item.id,
+        query: {
+          id: item.id
           // number: item.number
         }
       });
@@ -163,15 +178,23 @@ export default {
     // 获取游戏列表
     getGameList() {
       this.$http.post("home/gameList", {}).then(res => {
-          if (res.retCode == 0) {
-            this.gameList = res.data;
-          }
-        });
+        if (res.retCode == 0) {
+          this.gameList = res.data;
+        }
+      });
+    },
+    // 获取轮播图列表
+    getBannerList() {
+      this.$http.post("banner/list", {}).then(res => {
+        if (res.retCode == 0) {
+          this.bannerList = res.data;
+        }
+      });
     },
     // 获取竞猜列表
     getGuessList(gameId) {
       let params = {
-        gameId: this.activeGame=="all"?'':this.activeGame,
+        gameId: this.activeGame == "all" ? "" : this.activeGame,
         playType: this.playType,
         pageSize: this.pageSize,
         pageNum: this.pageNum
@@ -180,21 +203,21 @@ export default {
       this.$http.post("home/homeList", params).then(res => {
         if (res.retCode == 0) {
           if (res.retCode == 0) {
-         this.guessList = this.guessList.concat(res.data);
-         this.pageNum++;
-          if(res.data.length < this.pageSize) {
-            this.finished = true;
+            this.guessList = this.guessList.concat(res.data);
+            this.pageNum++;
+            if (res.data.length < this.pageSize) {
+              this.finished = true;
+            }
           }
-        }
-        this.loading = false;
+          this.loading = false;
         }
       });
     },
     // 标签改变
     gameChange(name) {
       this.activeGame = name;
-      this.pageNum=0;
-      this.guessList=[];
+      this.pageNum = 0;
+      this.guessList = [];
       this.finished = false;
       this.getGuessList();
     },
@@ -203,7 +226,7 @@ export default {
       this.carData.splice(res.index, 1);
     },
     // 更新购物车数据
-    uploadCarData(){
+    uploadCarData() {
       this.carData = [];
     }
   }
@@ -220,6 +243,11 @@ export default {
     background-color: #000000;
     .van-swipe {
       height: 100%;
+      .banner-img {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+      }
     }
   }
   .navs-box {
@@ -306,7 +334,7 @@ export default {
           color: #000;
           flex: 1;
         }
-        .icon-number{
+        .icon-number {
           font-size: 22px;
           color: #000;
           padding: 0 15px;
@@ -365,14 +393,14 @@ export default {
             &:last-child {
               border-bottom: 0;
             }
-            &.main-r-active{
-              .num{
-                background: rgba(255,196,68,0.7);
+            &.main-r-active {
+              .num {
+                background: rgba(255, 196, 68, 0.7);
                 color: $black;
               }
             }
           }
-          .disable-icon{
+          .disable-icon {
             position: absolute;
             right: 0;
           }
