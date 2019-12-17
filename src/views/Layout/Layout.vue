@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <Navigation>
-      <router-link v-if="$route.name=='Bonus'" slot='nav-r-slot' class="set-link" to="/layout/MySub">设置</router-link>
+      <!-- <router-link v-if="$route.name=='Bonus'" slot='nav-r-slot' class="set-link" to="/layout/MySub">设置</router-link> -->
     </Navigation>
     <keep-alive>
       <transition name="fade-transform" mode="out-in">
