@@ -21,7 +21,7 @@
         </div>
         <div class="input-box">
           <img src="../../assets/login-invite.png" class="label" alt="">
-          <input type="text" v-model="signIn.invitationCode" @blur="windowScrollBack" placeholder="推荐码（非必填）" />
+          <input type="text" v-model="signIn.invitationCode" :readonly='readonly' @blur="windowScrollBack" placeholder="推荐码（非必填）" />
         </div>
         <div class="btn" @click="registerFun">注册</div>
         <p class="back" @click="isRegister=false;">返回登录</p>
@@ -65,13 +65,26 @@ export default {
         loginAccount: "",
         loginPassword: ""
       },
-      isRegister: false // 是否注册
+      isRegister: false, // 是否注册
+      readonly: false
     };
   },
   created() {
     this.$store.commit('setUserInfo', null);
     this.$store.commit('setToken', '');
     localStorage.clear();
+    if(this.$route.query.code){
+      sessionStorage.setItem('invitationCode',this.$route.query.code)
+      this.signIn.invitationCode = this.$route.query.code;
+      this.isRegister = true;
+      this.readonly = true
+    }else{
+      let invitationCode = sessionStorage.getItem('invitationCode');
+      if(invitationCode){
+        this.signIn.invitationCode = invitationCode || ''
+        this.readonly = true
+      }
+    }
   },
   methods: {
     uploadUserInfo: uploadUserInfo,//获取用户详情
