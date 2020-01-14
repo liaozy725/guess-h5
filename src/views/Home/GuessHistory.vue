@@ -8,8 +8,9 @@
       <ul class="guess-list">
         <li v-for="(item,index) in listData" :key="index">
           <div class="list-tit">
-            <img src="../../assets/game.png" alt class="tit-logo" />
+            <img :src="item.gamePic" alt class="tit-logo" />
             <span>{{item.title}}</span>
+            <span class="more-res" v-if="item.matchResult==1" @click="moreRes(item)">更多赛果</span>
           </div>
           <div class="list-main">
             <div class="time">
@@ -79,7 +80,17 @@ export default {
       this.finished = false;
       this.listData = [];
       this.getList()
-    }
+    },
+    // 更多赛果
+    moreRes(item) {
+      this.$router.push({
+        path: '/layout/GuessResDetail',
+        query: {
+          type: 'guessRes',
+          id: item.guessId
+        }
+      })
+    },
   }
 };
 </script>
@@ -106,6 +117,14 @@ export default {
         span {
           font-size: 20px;
           color: #000;
+          flex: 1;
+        }
+        .more-res {
+          text-align: right;
+          flex: none;
+          height: 53px;
+          line-height: 53px;
+          float: right;
         }
       }
       .list-main {

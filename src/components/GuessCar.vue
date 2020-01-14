@@ -79,7 +79,8 @@ export default {
     totalMoney(){
       let total = 0;
       this.carData.forEach(el => {
-        total += parseFloat((el.number*el.oddsAmount).toFixed(2))
+        total += parseFloat((el.number*1).toFixed(2))
+        // total += parseFloat((el.number*el.oddsAmount).toFixed(2))
       });
       return total.toFixed(2)
     }

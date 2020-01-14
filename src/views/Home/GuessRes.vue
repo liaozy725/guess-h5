@@ -16,7 +16,7 @@
       <ul class="guess-list">
         <li v-for="(item,index) in listData">
           <div class="list-tit">
-            <img src="../../assets/game.png" alt class="tit-logo" />
+            <img :src="item.gamePic" alt class="tit-logo" />
             <span>{{item.matchName}} - {{item.name}}</span>
             <span class="more-res" @click="moreRes(item)">更多赛果</span>
           </div>
