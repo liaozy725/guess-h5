@@ -3,9 +3,9 @@
     <van-tabs v-model="active" :border="false" @change="changeTab">
       <van-tab title="全部" name="0"></van-tab>
       <van-tab title="充值" name="1"></van-tab>
-      <van-tab title="结算"></van-tab>
       <van-tab title="提现" name="2"></van-tab>
-      <van-tab title="投注" name="3"></van-tab>
+      <van-tab title="结算" name="3"></van-tab>
+      <van-tab title="投注" name="4"></van-tab>
       
       <!-- <van-tab title="其他"></van-tab> -->
     </van-tabs>
