@@ -13,12 +13,12 @@
         <img src="../../assets/icon-l.png" class="icon-r" alt />
       </router-link>
     </div>
-    <div class="list-box">
+    <!-- <div class="list-box">
       <div class="label-text">支付密码</div>
       <router-link to="/layout/ChangePayPwd" class="label-content">
         <img src="../../assets/icon-l.png" class="icon-r" alt />
       </router-link>
-    </div>
+    </div> -->
   </div>
 </template>
 
