@@ -25,4 +25,7 @@ export default {
   -webkit-overflow-scrolling: touch;
   overflow-y: auto;
 }
+.van-tab__text{
+  font-size: 28px;
+}
 </style>

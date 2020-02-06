@@ -159,6 +159,8 @@ export default {
         });
         return
       }
+      let ip = returnCitySN["cip"];
+      this.loginForm.ip = ip;
       this.$http.post("account/login", this.loginForm).then(res => {
         if (res.retCode == 0) {
           this.$store.commit("setToken", res.data.token);

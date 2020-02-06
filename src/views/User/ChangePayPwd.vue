@@ -90,9 +90,10 @@ export default {
             forbidClick: true, // 禁用背景点击
             message: "操作成功！"
           });
-          this.uploadUserInfo();
+          
           this.$router.go(-1);//返回上一层
         }
+        this.uploadUserInfo();
       });
     },
     //点击输入支付密码
