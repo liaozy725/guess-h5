@@ -62,7 +62,8 @@
         <div @click='goToRouterLink("/layout/stream")' class="link">财务流水</div>
         <div @click='goToRouterLink("/layout/AccountSafe")' class="link">账号安全</div>
         <div @click='goToRouterLink("/layout/SystemMsg")' class="link">系统消息</div>
-        <div @click='goToRouterLink("/layout/home")' class="link">联系客服</div>
+        <!-- <div @click='goToRouterLink("/layout/home")' class="link">联系客服</div> -->
+        <a href="//kefu.easemob.com/webim/im.html?configId=21c85254-7e26-40d4-9e20-d229b21b1969" target="_blank" class="link">在线客服</a>
       </div>
       <div class="logout" @click="logout">退出登录</div>
     </van-popup>
