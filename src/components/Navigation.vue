@@ -62,8 +62,7 @@
         <div @click='goToRouterLink("/layout/stream")' class="link">财务流水</div>
         <div @click='goToRouterLink("/layout/AccountSafe")' class="link">账号安全</div>
         <div @click='goToRouterLink("/layout/SystemMsg")' class="link">系统消息</div>
-        <!-- <div @click='goToRouterLink("/layout/home")' class="link">联系客服</div> -->
-        <a href="//kefu.easemob.com/webim/im.html?configId=21c85254-7e26-40d4-9e20-d229b21b1969" target="_blank" class="link">在线客服</a>
+        <div @click='contactService' class="link">联系客服</div>
       </div>
       <div class="logout" @click="logout">退出登录</div>
     </van-popup>
@@ -108,7 +107,6 @@ export default {
     },
     // 时间选择回调
     selectDate(dateList){
-      console.log(dateList);
       
     },
     // 跳转页面
@@ -134,6 +132,17 @@ export default {
         this.$store.commit('changeTime',time)
       }
     },
+    // 联系客服
+    contactService(){
+      zE('webWidget', 'updateSettings', {webWidget: {zIndex: 9999}});
+    }
+  },
+  watch:{
+    showUserMenu(newV){
+      if(!newV){
+        zE('webWidget', 'updateSettings', {webWidget: {zIndex: -1}});
+      }
+    }
   }
 };
 </script>
@@ -301,7 +310,7 @@ export default {
       width: 100%;
       color: #89868f;
       font-size: 24px;
-      text-align: right;
+      padding-left: 60px; 
       padding-right: 68px;
     }
   }

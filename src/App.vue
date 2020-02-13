@@ -13,7 +13,21 @@
 
 
 export default {
-  
+  mounted(){
+    this.$nextTick(()=>{
+      window.zESettings = {
+        webWidget: {
+          color: { 
+            theme: '#ffc444'
+          },
+          launcher:{
+            chatLabel: { '*': '联系客服' }
+          },
+          zIndex: -1
+        }
+      }
+    })
+  },
 }
 </script>
 

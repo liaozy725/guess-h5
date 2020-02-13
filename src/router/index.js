@@ -65,6 +65,10 @@ var router = new Router({
       name: 'login',
       component: () => import('@/views/Other/Login.vue')
     },
+    {
+      path: '*',
+      redirect: '/layout/home'
+    }
   ]
 })
 
