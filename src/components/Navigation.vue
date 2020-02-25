@@ -58,6 +58,7 @@
       <div class="menu-list">
         <div @click='goToRouterLink("/layout/pay")' class="link">充值</div>
         <div @click='goToRouterLink("/layout/withdraw")' class="link">提现</div>
+        <div @click='goToRouterLink("/layout/Account")' class="link">账户</div>
         <div @click='goToRouterLink("/layout/GuessHistory")' class="link">投注历史</div>
         <div @click='goToRouterLink("/layout/stream")' class="link">财务流水</div>
         <div @click='goToRouterLink("/layout/AccountSafe")' class="link">账号安全</div>

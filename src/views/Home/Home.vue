@@ -1,6 +1,6 @@
 <template>
   <div class="container home" @scroll="onPageScroll" :style="isFixed?'padding-top:'+fixedHeight +'px':''">
-    <div class="swiper">
+    <div class="swiper" id='swiper'>
       <van-swipe :autoplay="3000" :show-indicators="false">
         <van-swipe-item v-for="item in bannerList">
           <a :href="item.url">
@@ -101,7 +101,7 @@ export default {
   },
   mounted() {
     this.baseHeight = document.getElementById("navigation").offsetHeight;
-    this.fixedHeight = this.$refs.navsBox.offsetHeight;
+    this.fixedHeight = this.$refs.navsBox.offsetHeight + document.getElementById("swiper").offsetHeight;
   },
   computed: {
     // 判断是否在里面
@@ -121,7 +121,7 @@ export default {
     uploadUserInfo: uploadUserInfo,
     // 页面滚动
     onPageScroll(e) {
-      this.isFixed = e.target.scrollTop > this.fixedHeight - 1;
+      this.isFixed = e.target.scrollTop > this.fixedHeight - 10;
     },
     // 改变早盘、滚盘
     changeType(type) {

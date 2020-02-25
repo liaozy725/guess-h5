@@ -42,7 +42,12 @@
           <span class="sure" @click="sureInput">确认</span>
         </div>
       </div>
-      <van-button size="large" color="#ffc444" class="submit-btn" @click="submit">确认投注 {{totalMoney}} RMB</van-button>
+      <div class="submit-btn-box">
+        <van-dropdown-menu direction="up">
+          <van-dropdown-item v-model="selectMoney" :options="option1" @change='moneyChanged' />
+        </van-dropdown-menu>
+        <van-button style="width:50%" color="#ffc444" class="submit-btn" @click="submit">确认投注 {{totalMoney}} RMB</van-button>
+      </div>
     </div>
   </van-popup>
 </template>
@@ -71,7 +76,13 @@ export default {
       showKeyboard: false, // 显示键盘
       showAll:true, // 显示列表
       keyboardValue: 0,
-      activeItemIndex:0
+      activeItemIndex:0,
+      selectMoney:0,
+      option1: [
+        { text: '全部商品', value: 0 },
+        { text: '新款商品', value: 1 },
+        { text: '活动商品', value: 2 }
+      ]
     };
   },
   computed:{
@@ -125,6 +136,11 @@ export default {
         guessInfoId: item.guessInfoId,
         gameTeamId: item.gameTeamId
       }
+    },
+    // 选择币种回调
+    moneyChanged(res){
+      console.log(res);
+      
     },
     // 确认投注
     submit(){
@@ -336,13 +352,36 @@ export default {
         }
       }
     }
+    .submit-btn-box{
+      background: $yellow;
+      display: flex;
+      .van-dropdown-menu{
+        flex: 1;
+        background: transparent;
+      }
+    }
   }
 }
 </style>
 
 <style lang="css" scoped>
+
 .submit-btn >>> .van-button__text {
   color: #252426;
   font-size: 29px;
+  vertical-align: middle;
+}
+.submit-btn-box >>>.van-ellipsis{
+  font-size: 32px;
+  color: #252426;
+}
+.submit-btn-box >>>.van-dropdown-menu__title--active{
+  color: #252426;
+}
+.submit-btn-box >>>.van-dropdown-item__option--active .van-cell__title span{
+  color: #ffc444;
+}
+.submit-btn-box >>>.van-cell__title span{
+  font-size: 28px;
 }
 </style>
